@@ -9,9 +9,9 @@ if(isset($_SESSION['username'])){
 	$username = $_SESSION['username'];
 }
 	include "../config.php";
-	$profil=mysql_fetch_array(mysql_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
+	$profil=mysqli_fetch_array(mysqli_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
 
-    $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
+    $count = mysqli_fetch_array(mysqli_query("SELECT COUNT(*) FROM
                                             (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
                                             FROM pesan p, pegawai pg, authorization a
                                             WHERE p.dari = pg.id_pegawai AND a.id_pegawai = p.ke AND a.username = '$username' AND p.status=0) PESAN"));
@@ -245,10 +245,10 @@ if(isset($_SESSION['username'])){
 
 $idmasuk = $_GET['idmasuk'];
 
-$sql1 = mysql_query ("SELECT * FROM penjualan where id_pemasukan='$idmasuk'");
-   while ($tmpl=mysql_fetch_array($sql1)){
-    $sql2 = mysql_query("SELECT * FROM warehouse where id_barang='$tmpl[id_barang]'");
-    $tmpl2= mysql_fetch_array($sql2);
+$sql1 = mysqli_query ("SELECT * FROM penjualan where id_pemasukan='$idmasuk'");
+   while ($tmpl=mysqli_fetch_array($sql1)){
+    $sql2 = mysqli_query("SELECT * FROM warehouse where id_barang='$tmpl[id_barang]'");
+    $tmpl2= mysqli_fetch_array($sql2);
     $nama1=$tmpl2['Nama'];
     $jumlah=$tmpl['jumlah'];
     $tot=$tmpl['total'];

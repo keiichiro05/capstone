@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<?php include('../konekdb.php');
+<?php
+include_once('../konekdb.php');
 session_start();
-$username=$_SESSION['username'];
-$cekuser=mysql_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'superadmin'");
-$user=mysql_fetch_array($cekuser);
-if($user['jmluser']=="0")
-{
-header("location:../index.php");
-};?>
+$username = $_SESSION['username'];
+$cekuser = mysqli_query($mysqli, "SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'superadmin'");
+$user = mysqli_fetch_assoc($cekuser);
+if ($user['jmluser'] == "0") {
+    header("location:../index.php");
+    exit;
+}
+?>
 <html>
     <head>
         <meta charset="UTF-8">
@@ -156,12 +158,12 @@ header("location:../index.php");
                             <tr><td>No</td><td>ID Pegawai</td><td>Username</td><td>Password</td><td>Modul</td><td>Aksi</td></tr>
                         <?php
                         error_reporting(0);
-                        include "konekdb.php";
+                        include_once "konekdb.php";
                         $sql = "SELECT * FROM authorization where id_pegawai!='99'";
-                        $hasil = mysql_query ($sql, $mysql_connect);
+                        $hasil = mysqli_query($mysqli, $sql);
                         $no=1;
                 
-                        while ($baris=mysql_fetch_array($hasil)){
+                        while ($baris=mysqli_fetch_array($hasil)){
                         $username=$baris[0];
                         $id=$baris[1];
                         $password=$baris[2];

@@ -1,19 +1,52 @@
 <?php
 include "konekdb.php";
+session_start();
 
-$no=$_GET['no'];
-$nama=$_GET['nama'];
-$jenis=$_GET['jenis'];
-$jumlah=$_GET['jumlah'];
-$satuan=$_GET['satuan'];
-$supplier=$_GET['supplier'];
-$status=$_GET['status'];
-$cabang=$_GET['cabang'];
-$tgl=date('Y-m-d', mktime(0, 0, 0, date('m'), date('d'), date('Y')));
+if(isset($_GET['no'])) {
+    $no = intval($_GET['no']);
+    
+    // Get the order data first
+    $getOrder = mysqli_query($mysqli, "SELECT * FROM dariwarehouse WHERE no = $no");
+    $order = mysqli_fetch_assoc($getOrder);
+    
+    if($order) {
+        $currentDate = date('Y-m-d H:i:s');
+        
+        // Prepare statement for pemesanan table
+        $stmt = $mysqli->prepare("INSERT INTO pemesanan 
+                        (code, namabarang, kategori, jumlah, satuan, id_supplier, tanggal, status, cabang) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, '1', ?)");
+        $stmt->bind_param("sssissis", 
+            $order['code'],
+            $order['nama'],
+            $order['kategori'],
+            $order['jumlah'],
+            $order['satuan'],
+            $order['supplier'],
+            $currentDate,
+            $order['cabang']
+        );
+        
+        if($stmt->execute()) {
+            // Delete from dariwarehouse table
+            $stmt2 = $mysqli->prepare("DELETE FROM dariwarehouse WHERE no = ?");
+            $stmt2->bind_param("i", $no);
+            
+            if($stmt2->execute()) {
+                $_SESSION['message'] = '<div class="alert alert-success">Pesanan telah diterima dan dipindahkan ke database pemesanan.</div>';
+            } else {
+                $_SESSION['message'] = '<div class="alert alert-danger">Gagal menghapus pesanan dari daftar.</div>';
+            }
+        } else {
+            $_SESSION['message'] = '<div class="alert alert-danger">Gagal memindahkan pesanan ke database pemesanan.</div>';
+        }
+    } else {
+        $_SESSION['message'] = '<div class="alert alert-danger">Pesanan tidak ditemukan.</div>';
+    }
+} else {
+    $_SESSION['message'] = '<div class="alert alert-danger">Parameter tidak valid.</div>';
+}
 
-mysql_query("INSERT INTO pemesanan (namabarang,jenis,jumlah,satuan,tanggal,status) VALUES ('$nama','$jenis','$jumlah','$satuan','$tgl','0')");
-mysql_query("UPDATE dariwarehouse SET status='1' WHERE No='$no'");
-
-header ("location:daftarACC.php");
-
+header("Location: daftarpermintaan.php");
+exit();
 ?>

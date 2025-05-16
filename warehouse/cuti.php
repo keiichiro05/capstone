@@ -3,10 +3,11 @@
 session_start();
 $username=$_SESSION['username'];
 $idpegawai=$_SESSION['idpegawai'];
-$cekuser=mysql_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'Warehouse'");
-$user=mysql_fetch_array($cekuser);
-$getpegawai=mysql_query("SELECT * FROM pegawai where id_pegawai='$idpegawai'");
-$pegawai=mysql_fetch_array($getpegawai);
+
+$cekuser=mysqli_query($mysqli,"SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'Warehouse'");
+$user=mysqli_fetch_array($cekuser);
+$getpegawai=mysqli_query($mysqli, "SELECT * FROM pegawai where id_pegawai='$idpegawai'");
+$pegawai=mysqli_fetch_array($getpegawai);
 if($user['jmluser']=="0")
 {
 header("location:../index.php");
@@ -129,6 +130,11 @@ header("location:../index.php");
                                 <i class="fa fa-dashboard"></i> <span>Statistical</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="kategori.php">
+                                <i class="fa fa-list-alt"></i> <span>Category</span>
+                            </a>
+                        </li>
                         <li >
                             <a href="order.php">
                                 <i class="fa fa-th"></i> <span>Order</span>
@@ -199,15 +205,15 @@ header("location:../index.php");
                 $aksi=0;
 
                 if($mulai&&$selesai&&$detail){
-                mysql_query("INSERT INTO cuti (id_pegawai, Nama, Departemen,Tanggal_Mulai, Tanggal_Selesai, Detail_cuti, Aksi) VALUES ('$idpegawai','$pegawai[Nama]', '$pegawai[Departemen]','$mulai','$selesai','$detail','$aksi')");}else{}
+                mysqli_query("INSERT INTO cuti (id_pegawai, Nama, Departemen,Tanggal_Mulai, Tanggal_Selesai, Detail_cuti, Aksi) VALUES ('$idpegawai','$pegawai[Nama]', '$pegawai[Departemen]','$mulai','$selesai','$detail','$aksi')");}else{}
                 ?>
                         <h1>Pengajuan Cuti</h1>
                         <table class="table table-bordered table-striped">
                         <tr><td>Tanggal Mulai</td><td>Tanggal Selesai</td><td>Detail Cuti</td><td>Status</td></tr>
                         <?php
                         $sql = "SELECT * FROM cuti where id_pegawai='$idpegawai'";
-                        $hasil = mysql_query ($sql, $mysql_connect);
-                        while ($baris=mysql_fetch_array($hasil)){
+                        $hasil = mysqli_query($mysqli, $sql);
+                        while ($baris=mysqli_fetch_array($hasil)){
                         $mulai=$baris[7];
                         $selesai=$baris[8];
                         $detail=$baris[4];

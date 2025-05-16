@@ -2,6 +2,11 @@
 $server = "localhost";
 $user = "root";
 $password = "";
-$mysql_connect = mysql_connect($server,$user,$password) or die ("MySQL ndak konek");
-$db_connect = mysql_select_db("e-pharm") or die ("DB ndak konek");
+$mysqli = mysqli_connect($server, $user, $password, "e-pharm");
+
+if (mysqli_connect_errno()) {
+    echo "Gagal koneksi ke mysqli: " . mysqli_connect_error();
+    exit();
+}
+
 ?>

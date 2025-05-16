@@ -3,10 +3,10 @@
 session_start();
 $username=$_SESSION['username'];
 $idpegawai=$_SESSION['idpegawai'];
-$cekuser=mysql_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'HR'");
-$user=mysql_fetch_array($cekuser);
-$getpegawai=mysql_query("SELECT * FROM pegawai where id_pegawai='$idpegawai'");
-$pegawai=mysql_fetch_array($getpegawai);
+$cekuser=mysqli_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'HR'");
+$user=mysqli_fetch_array($cekuser);
+$getpegawai=mysqli_query("SELECT * FROM pegawai where id_pegawai='$idpegawai'");
+$pegawai=mysqli_fetch_array($getpegawai);
 if($user['jmluser']=="0")
 {
 header("location:../index.php");
@@ -215,7 +215,7 @@ $con=mysqli_connect("localhost","root","","e-pharm");
 // Check connection
 if (mysqli_connect_errno())
 {
-echo "Failed to connect to MySQL: " . mysqli_connect_error();
+echo "Failed to connect to mysqli: " . mysqli_connect_error();
 }
 
 $result = mysqli_query($con,"SELECT * FROM recruitment");

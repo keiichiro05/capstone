@@ -10,7 +10,7 @@ if(isset($_SESSION['username'])){
 	$username = $_SESSION['username'];
 }
 
-$count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
+$count = mysqli_fetch_array(mysqli_query("SELECT COUNT(*) FROM
                                             (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
                                             FROM pesan p, pegawai pg, authorization a
                                             WHERE p.dari = pg.id_pegawai AND a.id_pegawai = p.ke AND a.username = '$username' AND p.status=0) PESAN"));
@@ -64,8 +64,8 @@ $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
                          <?php 
 						$username=$_SESSION['username'];
 						$iduser=$_SESSION['idpegawai'];
-						$usersql = mysql_query("SELECT * FROM pegawai where id_pegawai='$iduser'"); 
-						$hasiluser=mysql_fetch_array($usersql);
+						$usersql = mysqli_query("SELECT * FROM pegawai where id_pegawai='$iduser'"); 
+						$hasiluser=mysqli_fetch_array($usersql);
 						?>
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">

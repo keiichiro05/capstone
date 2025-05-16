@@ -1,16 +1,31 @@
 <!DOCTYPE html>
 <?php include('../konekdb.php');
 session_start();
-$username=$_SESSION['username'];
-$idpegawai=$_SESSION['idpegawai'];
-$cekuser=mysql_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'Purchase'");
-$user=mysql_fetch_array($cekuser);
-$getpegawai=mysql_query("SELECT * FROM pegawai where id_pegawai='$idpegawai'");
-$pegawai=mysql_fetch_array($getpegawai);
-if($user['jmluser']=="0")
-{
-header("location:../index.php");
-};?>
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : null;
+$idpegawai = isset($_SESSION['idpegawai']) ? $_SESSION['idpegawai'] : null;
+
+if (!$username || !$idpegawai) {
+    header("location:../index.php");
+    exit;
+}
+
+$cekuser = mysqli_query($mysqli, "SELECT count(username) as jmluser FROM authorization WHERE username = '" . mysqli_real_escape_string($mysqli, $username) . "' AND modul = 'Purchase'");
+if (!$cekuser) {
+    die("Database query failed: " . mysqli_error($mysqli));
+}
+$user = mysqli_fetch_array($cekuser);
+
+$getpegawai = mysqli_query($mysqli, "SELECT * FROM pegawai WHERE id_pegawai='" . mysqli_real_escape_string($mysqli, $idpegawai) . "'");
+if (!$getpegawai) {
+    die("Database query failed: " . mysqli_error($mysqli));
+}
+$pegawai = mysqli_fetch_array($getpegawai);
+
+if ($user['jmluser'] == "0") {
+    header("location:../index.php");
+    exit;
+}
+?>
 <html>
     <head>
          <meta charset="UTF-8">
@@ -102,7 +117,7 @@ header("location:../index.php");
                 </div>
             </nav>
         </header>
-        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <div class="wrapper row-offcanvas row-offcanvas-left">
             <!-- Left side column. contains the logo and sidebar -->
             <aside class="left-side sidebar-offcanvas">                
                 <!-- sidebar: style can be found in sidebar.less -->
@@ -139,14 +154,14 @@ header("location:../index.php");
                             <a href="pemesanan.php">
                                 <i class="fa fa-list-alt"></i> <span>Pemesanan</span>
 								<?php 
-								$not1=mysql_query("SELECT count(id_pemesanan) from pemesanan where status='0'");
-								$tot1=mysql_fetch_array($not1);
-								$not2=mysql_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='1' group by id_transaksi");
-								$tot2=mysql_fetch_array($not2);
-								$not3=mysql_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='4' group by id_transaksi");
-								$tot3=mysql_fetch_array($not3);
-								$not4=mysql_query("SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
-								$tot4=mysql_fetch_array($not4);
+                                $not1=mysqli_query($mysqli, "SELECT count(id_pemesanan) from pemesanan where status='0'");
+								$tot1=mysqli_fetch_array($not1);
+                                $not2=mysqli_query($mysqli, "SELECT count(distinct id_transaksi) as jml from transaksi where status='1' group by id_transaksi");
+								$tot2=mysqli_fetch_array($not2);
+                                $not3=mysqli_query($mysqli, "SELECT count(distinct id_transaksi) as jml from transaksi where status='4' group by id_transaksi");
+								$tot3=mysqli_fetch_array($not3);
+                                $not4=mysqli_query($mysqli, "SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
+								$tot4=mysqli_fetch_array($not4);
 								if($tot1['count(id_pemesanan)']!=0){
 								?>
 								 <small class="badge pull-right bg-yellow"><?php echo $tot1['count(id_pemesanan)']?></small>
@@ -155,18 +170,18 @@ header("location:../index.php");
                         </li>
                         <li >
                             <a href="transaksi.php">
-                                <i class="fa fa-envelope"></i> <span>Perijinan Transaksi</span>
-								<?php if($tot2['jml']!=0){?>
+                                <i class="fa fa-check-square"></i> <span>Perijinan Transaksi</span>
+								<?php if(isset($tot2['jml']) && $tot2['jml'] != 0){?>
 								<small class="badge pull-right bg-green"><?php echo $tot2['jml']?></small>
 								<?php }?>
                             </a>
                         </li>
                         <li>
                             <a href="laporan.php">
-                               <i class="fa fa-check-square"></i> <span>Laporan</span>
-								<?php if($tot3['jml']!=0){?>
+                               <i class="fa fa-envelope"></i> <span>Laporan</span>
+                                <?php if(isset($tot3['jml']) && $tot3['jml'] != 0){?>
                                 <small class="badge pull-right bg-red"><?php echo $tot3['jml']?></small>
-								<?php }?>
+                                <?php }?>
                             </a>
                         </li>
                       <li>
@@ -229,59 +244,45 @@ header("location:../index.php");
                                         </thead>
                                         <tbody>
 										<?php 
-										$show=mysql_query("SELECT * from pemesanan where status='0'");
+                                        $show=mysqli_query($mysqli, "SELECT * from pemesanan where status='0'");
 										$i=0;
-										while($data=mysql_fetch_array($show)){
+										while($data=mysqli_fetch_array($show)){
 										$i++;
 										$id=$data['id_pemesanan'];
 										$ids=$data['id_supplier'];
-										$show2=mysql_query("SELECT nama_perusahaan from supplier where id_supplier='$ids'");
-										$data2=mysql_fetch_array($show2);
-										if($data['status']=='0'){
-										$status='<span class="label label-warning">Belum ACC</span>';
-										} else {
-										$status='<span class="label label-success">ACC</span>';
-										}
-                                            echo "<tr>
-                                                <td>".$i."</td>
-                                                <td>".$id."</td>
-                                                <td>".$data['namabarang']."</td>
-                                                <td>".$data['satuan']."</td>
-												<td>".$data['jumlah']."</td>
-												<td>";?>
-												 <form action="ijinpesan.php" method="get">
-												<div class="form-group">
-                                            <input type="text" class="form-control" name="harga" placeholder="Harga" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="hidden" class="form-control" name="a" value="acc">
-                                        </div>
-										<div class="form-group">
-                                            <input type="hidden" class="form-control" name="p" value="<?php echo $id;?>">
-                                        </div>
-										<div class="form-group">
-                                            <input type="hidden" class="form-control" name="ids" value="<?php echo $ids;?>">
-                                        </div>
-                                    </div><!-- /.box-body -->
+                                        
+                                        $show2 = mysqli_query($mysqli, "SELECT Nama_perusahaan FROM supplier WHERE id_supplier='$ids'");
+                                        $data2 = mysqli_fetch_array($show2);
+                                        $Nama_perusahaan = isset($data2['Nama_perusahaan']) ? $data2['Nama_perusahaan'] : 'Unknown Supplier';
 
-                                  
-                                       <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
-
-												
-												<?php echo "</td>
-												<td>".$data2['nama_perusahaan']."</td>
-												<td>".$status."</td>
-												<td>".$data['tanggal']."</td>";
-												?> 
-												<div class="box-footer">
-                                       <td> <button type="submit" class="btn btn-primary btn-sm">Accept</button>
-                                    </div>
-												</form>
-												<?php echo "
-												<a href=\"ijinpesan.php?p=$id&&a=dc&&ids=$ids\"><button class=\"btn btn-danger btn-sm\">Decline</button></a></td>
-                                            </tr>";
-                                             }?>
-                                        </tbody>
+                                        $status = ($data['status'] == '0') ? 
+                                            '<span class="label label-warning">Belum ACC</span>' : 
+                                            '<span class="label label-success">ACC</span>';
+                                    ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($i, ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo htmlspecialchars($data['namabarang'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo htmlspecialchars($data['satuan'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo htmlspecialchars($data['jumlah'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td>
+                                            <form action="ijinpesan.php" method="get" class="form-inline">
+                                                <input type="text" class="form-control input-sm" name="harga" placeholder="Harga" style="width: 100px;" required>
+                                                <input type="hidden" name="a" value="acc">
+                                                <input type="hidden" name="p" value="<?= $id ?>">
+                                                <input type="hidden" name="ids" value="<?= $ids ?>">
+                                        </td>
+                                        <td><?php echo htmlspecialchars($Nama_perusahaan, ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo $status; ?></td>
+                                        <td><?php echo htmlspecialchars($data['tanggal'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td>
+                                                <button type="submit" class="btn btn-primary btn-sm">Accept</button>
+                                            </form>
+                                            <a href="ijinpesan.php?p=<?= $id ?>&a=dc&ids=<?= $ids ?>" class="btn btn-danger btn-sm" style="margin-top: 5px;">Decline</a>
+                                        </td>
+                                    </tr>
+                                    <?php } ?>
+                                    </tbody>
                                         <!-- <tfoot>
                                             <tr>
                                                 <th>NO.</th>
@@ -293,6 +294,7 @@ header("location:../index.php");
 												<th>STATUS</th>
 												<th>TANGGAL</th>
 												<th>AKSI</th>
+                                         
                                             </tr>
                                         </tfoot> -->
                                     </table>

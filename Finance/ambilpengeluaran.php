@@ -2,21 +2,21 @@
 	include "../config.php";
 	$bulan = $_GET['bulan'];
 
-	$total = mysql_fetch_array(mysql_query("SELECT sum(total),DATE_FORMAT( tanggal, '%m' ) as tgl
+	$total = mysqli_fetch_array(mysqli_query("SELECT sum(total),DATE_FORMAT( tanggal, '%m' ) as tgl
                                             FROM pengeluaran
                                             WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan'
                                             group by tgl"));
-    $hasil = mysql_query("SELECT a.*, b.nama as pegawai, DATE_FORMAT(tanggal,'%d-%m-%Y') as Tanggal1
+    $hasil = mysqli_query("SELECT a.*, b.nama as pegawai, DATE_FORMAT(tanggal,'%d-%m-%Y') as Tanggal1
                         FROM pengeluaran a, pegawai b
                         WHERE a.id_pegawai = b.id_pegawai AND DATE_FORMAT( tanggal, '%m' ) = '$bulan'
                         ORDER BY tanggal");
 
 	/*echo "<tr><td id=\"atas\">Kode Lelang</td><td id=\"atas\">Nama Lelang</td><td id=\"atas\">Jenis</td><td id=\"atas\">Pemilik Lelang</td><td id=\"atas\">HPS</td><td id=\"atas\">Batas Lelang</td></tr>\n";
-	while($r = mysql_fetch_array($hasil)){ 
+	while($r = mysqli_fetch_array($hasil)){ 
 		echo "<tr><td><a href=\"lelang.php\">KD-00".$r[0]."</a></td><td style=\"text-align:left\"><a href=\"lelang.php\">$r[1]</a></td><td>$r[6]</td><td style=\"text-align:left\">$r[5]</td><td>$r[2]</td><td>$r[4]</td></tr>";
 	} 
 	*/
-	if (mysql_num_rows($hasil)==0) { 
+	if (mysqli_num_rows($hasil)==0) { 
 ?>
 				<div class="pad margin no-print">
                     <div class="alert alert-info" style="margin-bottom: 0!important;">
@@ -39,7 +39,7 @@
                                         <tbody>
 <?php
     $jml = 0;
-	while($kas=mysql_fetch_array($hasil)){
+	while($kas=mysqli_fetch_array($hasil)){
 ?>
                                         <tr>
                                             <td align="center"><?php echo $kas['Tanggal1']; ?></td>

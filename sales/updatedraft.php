@@ -8,7 +8,7 @@ include '../config.php';
 
 $sql = "UPDATE pesan set isi='$pesan', draft=0 WHERE id_pesan=$id";
 
-$hasil = mysql_query($sql);
+$hasil = mysqli_query($sql);
 
 
 if($hasil){

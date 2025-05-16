@@ -3,10 +3,10 @@
 session_start();
 $username=$_SESSION['username'];
 $idpegawai=$_SESSION['idpegawai'];
-$cekuser=mysql_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'Purchase'");
-$user=mysql_fetch_array($cekuser);
-$getpegawai=mysql_query("SELECT * FROM pegawai where id_pegawai='$idpegawai'");
-$pegawai=mysql_fetch_array($getpegawai);
+$cekuser=mysqli_query($mysqli, "SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'Purchase'");
+$user=mysqli_fetch_array($cekuser);
+$getpegawai=mysqli_query($mysqli, "SELECT * FROM pegawai where id_pegawai='$idpegawai'");
+$pegawai=mysqli_fetch_array($getpegawai);
 if($user['jmluser']=="0")
 {
 header("location:../index.php");
@@ -39,7 +39,7 @@ header("location:../index.php");
         <header class="header">
             <a href="../index.html" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
-               E-Pharm
+               U-PSN
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -139,16 +139,16 @@ header("location:../index.php");
                             <a href="pemesanan.php">
                                 <i class="fa fa-list-alt"></i> <span>Pemesanan</span>
 								<?php 
-								$not1=mysql_query("SELECT count(id_pemesanan) from pemesanan where status='0'");
-								$tot1=mysql_fetch_array($not1);
-								$not2=mysql_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='1' group by id_transaksi");
-								$tot2=mysql_fetch_array($not2);
-								$not3=mysql_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='4' group by id_transaksi");
-								$tot3=mysql_fetch_array($not3);
-								$not4=mysql_query("SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
-								$tot4=mysql_fetch_array($not4);
-								$not5=mysql_query("SELECT count(id_pesan) as jml from pesan where ke='$idpegawai' and status='0'");
-								$tot5=mysql_fetch_array($not5);
+                                $not1=mysqli_query($mysqli, "SELECT count(id_pemesanan) from pemesanan where status='0'");
+								$tot1=mysqli_fetch_array($not1);
+                                $not2=mysqli_query($mysqli, "SELECT count(distinct id_transaksi) as jml from transaksi where status='1' group by id_transaksi");
+								$tot2=mysqli_fetch_array($not2);
+                                $not3=mysqli_query($mysqli, "SELECT count(distinct id_transaksi) as jml from transaksi where status='4' group by id_transaksi");
+								$tot3=mysqli_fetch_array($not3);
+                                $not4=mysqli_query($mysqli, "SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
+								$tot4=mysqli_fetch_array($not4);
+                                $not5=mysqli_query($mysqli, "SELECT count(id_pesan) as jml from pesan where ke='$idpegawai' and status='0'");
+								$tot5=mysqli_fetch_array($not5);
 								if($tot1['count(id_pemesanan)']!=0){
 								?>
 								 <small class="badge pull-right bg-yellow"><?php echo $tot1['count(id_pemesanan)']?></small>
@@ -157,18 +157,20 @@ header("location:../index.php");
                         </li>
                         <li >
                             <a href="transaksi.php">
-                                <i class="fa fa-envelope"></i> <span>Perijinan Transaksi</span>
-								<?php if($tot2['jml']!=0){?>
+                                <i class="fa fa-check-square"></i> <span>Perijinan Transaksi</span>
+								<?php if(isset($tot2['jml']) && $tot2['jml'] != 0){?>
 								<small class="badge pull-right bg-green"><?php echo $tot2['jml']?></small>
 								<?php }?>
+                            </a>
+                        </li
                             </a>
                         </li>
                         <li>
                             <a href="laporan.php">
-                               <i class="fa fa-check-square"></i> <span>Laporan</span>
-								<?php if($tot3['jml']!=0){?>
+                               <i class="fa fa-envelope"></i> <span>Laporan</span>
+                                <?php if(isset($tot3['jml']) && $tot3['jml']!=0){?>
                                 <small class="badge pull-right bg-red"><?php echo $tot3['jml']?></small>
-								<?php }?>
+                                <?php }?>
                             </a>
                         </li>
                        <li>

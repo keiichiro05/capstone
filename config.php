@@ -1,6 +1,11 @@
 <?php
+// Updated code using mysqli_connect()
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db = "e-pharm";
+$conn = mysqli_connect($host, $user, $pass, $db);
 
-$koneksi = mysql_connect("localhost","root","");
-mysql_select_db("e-pharm",$koneksi);
-
-?>
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}

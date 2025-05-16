@@ -8,10 +8,10 @@ if(!isset($_SESSION['username'])){
 if(isset($_SESSION['username'])){
 	$username = $_SESSION['username'];
 }
-	include "../config.php";
-	$profil=mysql_fetch_array(mysql_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
-
-    $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
+	include "../config.php";    
+    $profil=mysqli_fetch_array(mysqli_query($conn, "select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
+    
+    $count = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) FROM
                                             (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
                                             FROM pesan p, pegawai pg, authorization a
                                             WHERE p.dari = pg.id_pegawai AND a.id_pegawai = p.ke AND a.username = '$username' AND p.status=0) PESAN"));

@@ -9,13 +9,13 @@ if(isset($_SESSION['username'])){
 	$username = $_SESSION['username'];
 }
 	include "../config.php";
-	$profil=mysql_fetch_array(mysql_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
-    //$bulan = mysql_fetch_array(mysql_query("SELECT DATE_FORMAT(NOW(),'%m') from DUAL"));
-    //$qsaldo = mysql_fetch_array(mysql_query("select * from saldo WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan[0]'"));
-    $query = mysql_query("SELECT *,DATE_FORMAT(date,'%d %b %Y') as tanggal FROM gajibulan WHERE status=0");
+	$profil=mysqli_fetch_array(mysqli_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
+    //$bulan = mysqli_fetch_array(mysqli_query("SELECT DATE_FORMAT(NOW(),'%m') from DUAL"));
+    //$qsaldo = mysqli_fetch_array(mysqli_query("select * from saldo WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan[0]'"));
+    $query = mysqli_query("SELECT *,DATE_FORMAT(date,'%d %b %Y') as tanggal FROM gajibulan WHERE status=0");
     
 
-    $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
+    $count = mysqli_fetch_array(mysqli_query("SELECT COUNT(*) FROM
                                             (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
                                             FROM pesan p, pegawai pg, authorization a
                                             WHERE p.dari = pg.id_pegawai AND a.id_pegawai = p.ke AND a.username = '$username' AND p.status=0) PESAN"));
@@ -244,7 +244,7 @@ if(isset($_SESSION['username'])){
 
                                         <?php
                                         
-                                            while($gaji=mysql_fetch_array($query)){
+                                            while($gaji=mysqli_fetch_array($query)){
                                     
                                             ?>
                                             <tr>

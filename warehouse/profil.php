@@ -56,8 +56,8 @@ if(!isset($_SESSION['username'])){
                          <?php 
 						$username=$_SESSION['username'];
 						$iduser=$_SESSION['idpegawai'];
-						$usersql = mysql_query("SELECT * FROM pegawai where id_pegawai='$iduser'"); 
-						$hasiluser=mysql_fetch_array($usersql);
+						$usersql = mysqli_query($mysqli, "SELECT * FROM pegawai where id_pegawai='$iduser'"); 
+						$hasiluser=mysqli_fetch_array($usersql);
 						?>
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">

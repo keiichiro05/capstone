@@ -2,8 +2,8 @@
 	include "../config.php";
 	$bulan = $_GET['bulan'];
 
-	$qsaldo = mysql_fetch_array(mysql_query("select *, DATE_FORMAT(tanggal,'%d-%m-%Y') as tanggal1 from saldo WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan'"));
-	$hasil = mysql_query("SELECT *, DATE_FORMAT(tanggal,'%d-%m-%Y') as tanggal1 FROM `pengeluaran` 
+	$qsaldo = mysqli_fetch_array(mysqli_query("select *, DATE_FORMAT(tanggal,'%d-%m-%Y') as tanggal1 from saldo WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan'"));
+	$hasil = mysqli_query("SELECT *, DATE_FORMAT(tanggal,'%d-%m-%Y') as tanggal1 FROM `pengeluaran` 
                         WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan'
                         UNION 
                         SELECT *,DATE_FORMAT(tanggal,'%d-%m-%Y') as tanggal1 FROM `pemasukan` 
@@ -11,12 +11,12 @@
                         ORDER BY tanggal");
 
 	/*echo "<tr><td id=\"atas\">Kode Lelang</td><td id=\"atas\">Nama Lelang</td><td id=\"atas\">Jenis</td><td id=\"atas\">Pemilik Lelang</td><td id=\"atas\">HPS</td><td id=\"atas\">Batas Lelang</td></tr>\n";
-	while($r = mysql_fetch_array($hasil)){ 
+	while($r = mysqli_fetch_array($hasil)){ 
 		echo "<tr><td><a href=\"lelang.php\">KD-00".$r[0]."</a></td><td style=\"text-align:left\"><a href=\"lelang.php\">$r[1]</a></td><td>$r[6]</td><td style=\"text-align:left\">$r[5]</td><td>$r[2]</td><td>$r[4]</td></tr>";
 	} 
 	*/
 	if ($qsaldo[0]==0) { 
-        if (mysql_num_rows($hasil)==0) { 
+        if (mysqli_num_rows($hasil)==0) { 
 ?>
 				<div class="pad margin no-print">
                     <div class="alert alert-info" style="margin-bottom: 0!important;">
@@ -55,7 +55,7 @@
 	$total_debet = $saldo;
     $total_kredit = 0;
 
-    while($kas=mysql_fetch_array($hasil)){
+    while($kas=mysqli_fetch_array($hasil)){
         if($kas['Kode']=="DB-"){
             $debet = $kas['Total'];
             $kredit = "-";

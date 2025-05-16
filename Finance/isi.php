@@ -16,33 +16,33 @@ if(isset($_SESSION['username'])){
 
     if($s==1){
         $sql = "UPDATE pesan SET status=1 WHERE id_pesan = $id";
-        $hasil = mysql_query($sql);
+        $hasil = mysqli_query($sql);
 
-        $pesan = mysql_fetch_array(mysql_query("SELECT id_pesan, pg.nama, isi, DATE_FORMAT( waktu, '%d %b %Y %h:%i %p' ) AS waktu
+        $pesan = mysqli_fetch_array(mysqli_query("SELECT id_pesan, pg.nama, isi, DATE_FORMAT( waktu, '%d %b %Y %h:%i %p' ) AS waktu
                         FROM pesan p, pegawai pg
                         WHERE p.dari = pg.id_pegawai AND id_pesan = $id"));
     }
     if($s==0){
-        $pesan = mysql_fetch_array(mysql_query("SELECT id_pesan, pg.nama, isi, DATE_FORMAT( waktu, '%d %b %Y %h:%i %p' ) AS waktu
+        $pesan = mysqli_fetch_array(mysqli_query("SELECT id_pesan, pg.nama, isi, DATE_FORMAT( waktu, '%d %b %Y %h:%i %p' ) AS waktu
                         FROM pesan p, pegawai pg
                         WHERE p.ke = pg.id_pegawai AND id_pesan = $id"));
     }
 
-	$profil=mysql_fetch_array(mysql_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
+	$profil=mysqli_fetch_array(mysqli_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
     
-    $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
+    $count = mysqli_fetch_array(mysqli_query("SELECT COUNT(*) FROM
                                             (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
                                             FROM pesan p, pegawai pg, authorization a
                                             WHERE p.dari = pg.id_pegawai
                                             AND a.id_pegawai = p.ke
                                             AND a.username = '$username' AND p.status=0) PESAN"));
-    $count_draft = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
+    $count_draft = mysqli_fetch_array(mysqli_query("SELECT COUNT(*) FROM
                                             (SELECT id_pesan, pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p') as waktu, p.status, a.username
                                             FROM pesan p, pegawai pg, authorization a
                                             WHERE p.ke = pg.id_pegawai AND a.id_pegawai = p.dari AND a.username = '$username' AND p.draft=1
                                             ORDER BY waktu DESC) PESAN"));
 
-    $name = mysql_query("SELECT nama FROM pegawai p, authorization a WHERE a.id_pegawai = p.id_pegawai AND a.username NOT LIKE '$username'");
+    $name = mysqli_query("SELECT nama FROM pegawai p, authorization a WHERE a.id_pegawai = p.id_pegawai AND a.username NOT LIKE '$username'");
 ?>
 
 
@@ -354,7 +354,7 @@ if(isset($_SESSION['username'])){
                                     <select name="nama" list="pegawai" class="form-control" placeholder="Name" required>                          
                                     
                                     <?php
-                                        while($n=mysql_fetch_array($name)){
+                                        while($n=mysqli_fetch_array($name)){
                                     ?>
                                       <option value="<?php echo $n[0];?>"><?php echo $n[0];?></option>
                                     <?php

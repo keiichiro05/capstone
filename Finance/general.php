@@ -9,17 +9,17 @@ if(isset($_SESSION['username'])){
 	$username = $_SESSION['username'];
 }
 	include "../config.php";
-	$profil=mysql_fetch_array(mysql_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
-    $bulan = mysql_fetch_array(mysql_query("SELECT DATE_FORMAT(NOW(),'%m') from DUAL"));
-    $qsaldo = mysql_fetch_array(mysql_query("select *, DATE_FORMAT(tanggal,'%d-%m-%Y') as tanggal1 from saldo WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan[0]'"));
-    $query = mysql_query("SELECT *, DATE_FORMAT(tanggal,'%d-%m-%Y') as tanggal1 FROM `pengeluaran` 
+    $profil=mysqli_fetch_array(mysqli_query($conn, "select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
+    $bulan = mysqli_fetch_array(mysqli_query($conn, "SELECT DATE_FORMAT(NOW(),'%m') from DUAL"));
+    $qsaldo = mysqli_fetch_array(mysqli_query($conn, "select *, DATE_FORMAT(tanggal,'%d-%m-%Y') as tanggal1 from saldo WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan[0]'"));
+    $query = mysqli_query($conn, "SELECT *, DATE_FORMAT(tanggal,'%d-%m-%Y') as tanggal1 FROM `pengeluaran` 
                         WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan[0]'
                         UNION 
                         SELECT *,DATE_FORMAT(tanggal,'%d-%m-%Y') as tanggal1 FROM `pemasukan` 
                         WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan[0]'
                         ORDER BY tanggal");
-
-    $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
+    
+    $count = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) FROM
                                             (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
                                             FROM pesan p, pegawai pg, authorization a
                                             WHERE p.dari = pg.id_pegawai AND a.id_pegawai = p.ke AND a.username = '$username' AND p.status=0) PESAN"));
@@ -331,7 +331,7 @@ if(isset($_SESSION['username'])){
                                         $total_debet = $saldo;
                                         $total_kredit = 0;
 
-                                        while($kas=mysql_fetch_array($query)){
+                                        while($kas=mysqli_fetch_array($query)){
                                             if($kas['Kode']=="DB-"){
                                                 $debet = $kas['Total'];
                                                 $kredit = "-";
@@ -342,8 +342,8 @@ if(isset($_SESSION['username'])){
                                                 $saldo = $saldo - $kredit;
                                             }
 
-                                            $total_debet = $total_debet + $debet;
-                                            $total_kredit = $total_kredit + $kredit;
+                                            $total_debet = $total_debet + (is_numeric($debet) ? intval($debet) : 0);
+                                            $total_kredit = $total_kredit + (is_numeric($kredit) ? intval($kredit) : 0);
                                         ?>
                                         <tr>
                                             <td align="center"><?php echo $kas['tanggal1']; ?></td>

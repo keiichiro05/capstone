@@ -70,8 +70,8 @@ if(!isset($_SESSION['username'])){
                          <?php 
 						$username=$_SESSION['username'];
 						$iduser=$_SESSION['idpegawai'];
-						$usersql = mysql_query("SELECT * FROM pegawai where id_pegawai='$iduser'"); 
-						$hasiluser=mysql_fetch_array($usersql);
+                        $usersql = mysqli_query($mysqli, "SELECT * FROM pegawai where id_pegawai='$iduser'"); 
+                        $hasiluser = mysqli_fetch_array($usersql);
 						?>
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
@@ -200,14 +200,14 @@ if(!isset($_SESSION['username'])){
                 <!-- Main content -->
                 <section class="content">
 				<?php 
-				$sql1 =mysql_query("SELECT count(id_penjualan) as total FROM penjualan");
-				$jual=mysql_fetch_array($sql1);
-				$sql2 = mysql_query("SELECT count(id_pemasukan) as jml FROM pemasukan where id_pegawai='$iduser' ");
-				$data=mysql_fetch_array($sql2);
-				$not4=mysql_query("SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
-				$tot4=mysql_fetch_array($not4);
-				$not5=mysql_query("SELECT count(id_pesan) as jml from pesan where ke='$idpegawai' and status='0'");
-				$tot5=mysql_fetch_array($not5);
+                $sql1 =mysqli_query($mysqli, "SELECT count(id_penjualan) as total FROM penjualan");
+				$jual=mysqli_fetch_array($sql1);
+                $sql2 = mysqli_query($mysqli, "SELECT count(id_pemasukan) as jml FROM pemasukan where id_pegawai='$iduser' ");
+				$data=mysqli_fetch_array($sql2);
+                $not4=mysqli_query($mysqli, "SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
+				$tot4=mysqli_fetch_array($not4);
+                $not5=mysqli_query($mysqli, "SELECT count(id_pesan) as jml from pesan where ke='$idpegawai' and status='0'");
+				$tot5=mysqli_fetch_array($not5);
 				?>
                     <!-- Small boxes (Stat box) -->
                     <div class="row">

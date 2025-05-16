@@ -10,27 +10,48 @@ if(!isset($_SESSION['username'])){
 if(isset($_SESSION['username'])){
 	$username = $_SESSION['username'];
 }
-	include "../config.php";
-	$profil=mysql_fetch_array(mysql_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
-    $pesan = mysql_query("SELECT id_pesan, pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p') as waktu, p.status, a.username
-                        FROM pesan p, pegawai pg, authorization a
-                        WHERE p.ke = pg.id_pegawai AND a.id_pegawai = p.dari AND a.username = '$username' AND p.draft=1
-                        ORDER BY waktu DESC");
+    include "../config.php";
+    $mysqli_connect = new mysqli($conn['host'], $conn['user'], $conn['pass'], $conn['db']);
 
-    $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
-                                            (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
-                                            FROM pesan p, pegawai pg, authorization a
-                                            WHERE p.dari = pg.id_pegawai
-                                            AND a.id_pegawai = p.ke
-                                            AND a.username = '$username' AND p.status=0) PESAN"));
+    if ($mysqli_connect->connect_error) {
+        die("Connection failed: " . $mysqli->connect_error);
+    }
 
-    $count_draft = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
-                                            (SELECT id_pesan, pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p') as waktu, p.status, a.username
-                                            FROM pesan p, pegawai pg, authorization a
-                                            WHERE p.ke = pg.id_pegawai AND a.id_pegawai = p.dari AND a.username = '$username' AND p.draft=1
-                                            ORDER BY waktu DESC) PESAN"));
+    $profil_query = $mysqli_connect->prepare("SELECT p.*, DATE_FORMAT(p.Tanggal_Masuk, '%b, %Y') as tglmasuk 
+                                      FROM pegawai p, authorization a 
+                                      WHERE a.username = ? AND a.id_pegawai = p.id_pegawai");
+    $profil_query->bind_param("s", $username);
+    $profil_query->execute();
+    $profil = $profil_query->get_result()->fetch_assoc();
+    
+    $pesan_query = $mysqli->prepare("SELECT id_pesan, pg.nama, isi, DATE_FORMAT(waktu, '%d %b %Y %h:%i %p') as waktu, p.status, a.username
+                                      FROM pesan p, pegawai pg, authorization a
+                                      WHERE p.ke = pg.id_pegawai AND a.id_pegawai = p.dari AND a.username = ? AND p.draft = 1
+                                      ORDER BY waktu DESC");
+    $pesan_query->bind_param("s", $username);
+    $pesan_query->execute();
+    $pesan = $pesan_query->get_result();
 
-    $name = mysql_query("SELECT nama FROM pegawai p, authorization a WHERE a.id_pegawai = p.id_pegawai AND a.username NOT LIKE '$username'");
+    $count_query = $mysqli->prepare("SELECT COUNT(*) as count 
+                                     FROM pesan p, pegawai pg, authorization a
+                                     WHERE p.dari = pg.id_pegawai AND a.id_pegawai = p.ke AND a.username = ? AND p.status = 0");
+    $count_query->bind_param("s", $username);
+    $count_query->execute();
+    $count = $count_query->get_result()->fetch_assoc();
+
+    $count_draft_query = $mysqli->prepare("SELECT COUNT(*) as count 
+                                           FROM pesan p, pegawai pg, authorization a
+                                           WHERE p.ke = pg.id_pegawai AND a.id_pegawai = p.dari AND a.username = ? AND p.draft = 1");
+    $count_draft_query->bind_param("s", $username);
+    $count_draft_query->execute();
+    $count_draft = $count_draft_query->get_result()->fetch_assoc();
+
+    $name_query = $mysqli->prepare("SELECT nama 
+                                    FROM pegawai p, authorization a 
+                                    WHERE a.id_pegawai = p.id_pegawai AND a.username NOT LIKE ?");
+    $name_query->bind_param("s", $username);
+    $name_query->execute();
+    $name = $name_query->get_result();
 ?>
 
 
@@ -217,18 +238,17 @@ if(isset($_SESSION['username'])){
                                                 <ul class="nav nav-pills nav-stacked">
                                                     <li class="header">Folders</li>
                                                     <?php
-                                                        $c = "";
-                                                        if($count[0]!=0)
-                                                            $c = "(".$count[0].")";
-                                                        else
                                                             $c = "";
-
-                                                        $cd = "";
-                                                        if($count_draft[0]!=0)
-                                                            $cd = "(".$count_draft[0].")";
-                                                        else
+                                                            if (isset($count['count']) && $count['count'] != 0) {
+                                                                $c = "(" . $count['count'] . ")";
+                                                            }
+                                                            
                                                             $cd = "";
-                                                    ?>
+                                                            if (isset($count_draft['count']) && $count_draft['count'] != 0) {
+                                                                $cd = "(" . $count_draft['count'] . ")";
+                                                            }
+                                                            ?>
+
                                                     <li><a href="mailbox.php"><i class="fa fa-inbox"></i> Inbox <?php echo $c;?></a></li>
                                                     <li class="active"><a href="draft.php"><i class="fa fa-pencil-square-o"></i> Drafts <?php echo $cd;?></a></li>
                                                     <li><a href="sent.php"><i class="fa fa-mail-forward"></i> Sent</a></li>
@@ -274,14 +294,14 @@ if(isset($_SESSION['username'])){
                                                 <!-- THE MESSAGES -->
                                                 <table class="table table-mailbox">
                                                 <?php
-                                                while($p=mysql_fetch_array($pesan)){
+                                                while($p = $pesan->fetch_assoc()){
                                                 
                                                 ?>
                                                     
                                                         <td class="small-col"><input type="checkbox" /></td>
                                                         <td class="small-col"><i class="fa fa-star"></i></td>
-                                                        <td class="name"><a href="isidraft.php?id=<?php echo $p['0'];?>&s=0"><?php echo $p['nama'];?></a></td>
-                                                        <td class="subject"><a href="isidraft.php?id=<?php echo $p['0'];?>&s=0"><?php echo $p['isi'];?></a></td>
+                                                        <td class="name"><a href="isidraft.php?id=<?php echo $p['id_pesan'];?>&s=0"><?php echo $p['nama'];?></a></td>
+                                                        <td class="subject"><a href="isidraft.php?id=<?php echo $p['id_pesan'];?>&s=0"><?php echo $p['isi'];?></a></td>
                                                         <td class="time"><?php echo $p['waktu'];?></td>
                                                     </tr>
                                                 <?php
@@ -320,9 +340,9 @@ if(isset($_SESSION['username'])){
                                     <select name="nama" list="pegawai" class="form-control" placeholder="Name" required>                          
                                     
                                     <?php
-                                        while($n=mysql_fetch_array($name)){
+                                        while($n = $name->fetch_assoc()){
                                     ?>
-                                      <option value="<?php echo $n[0];?>"><?php echo $n[0];?></option>
+                                    <option value="<?php echo $n['nama'];?>"><?php echo $n['nama'];?></option>
                                     <?php
                                         }
                                     ?>

@@ -57,8 +57,8 @@ if(!isset($_SESSION['username'])){
                         <?php 
 						$username=$_SESSION['username'];
 						$iduser=$_SESSION['idpegawai'];
-						$usersql = mysql_query("SELECT * FROM pegawai where id_pegawai='$iduser'"); 
-						$hasiluser=mysql_fetch_array($usersql);
+						$usersql = mysqli_query("SELECT * FROM pegawai where id_pegawai='$iduser'"); 
+						$hasiluser=mysqli_fetch_array($usersql);
 						?>
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
@@ -201,9 +201,9 @@ if(!isset($_SESSION['username'])){
                                         <tbody>
 <?php
 include "konekdb.php";
-$sql1 = mysql_query ("SELECT * FROM warehouse");
-if(mysql_num_rows($sql1)>0){
-   while ($tmpl=mysql_fetch_array($sql1)){
+$sql1 = mysqli_query ("SELECT * FROM warehouse");
+if(mysqli_num_rows($sql1)>0){
+   while ($tmpl=mysqli_fetch_array($sql1)){
     $nama1=$tmpl['Nama'];
 	$jenis=$tmpl['Jenis'];
 	$harga=$tmpl['Harga'];

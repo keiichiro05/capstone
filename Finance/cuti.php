@@ -3,10 +3,10 @@
 session_start();
 $username=$_SESSION['username'];
 $idpegawai=$_SESSION['idpegawai'];
-$cekuser=mysql_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'Finance'");
-$user=mysql_fetch_array($cekuser);
-$getpegawai=mysql_query("SELECT * FROM pegawai where id_pegawai='$idpegawai'");
-$pegawai=mysql_fetch_array($getpegawai);
+$cekuser=mysqli_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'Finance'");
+$user=mysqli_fetch_array($cekuser);
+$getpegawai=mysqli_query("SELECT * FROM pegawai where id_pegawai='$idpegawai'");
+$pegawai=mysqli_fetch_array($getpegawai);
 if($user['jmluser']=="0")
 {
 header("location:../index.php");
@@ -14,9 +14,9 @@ header("location:../index.php");
 if(isset($_SESSION['username'])){
 	$username = $_SESSION['username'];
 }
-$profil=mysql_fetch_array(mysql_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
+$profil=mysqli_fetch_array(mysqli_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
 
-$count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
+$count = mysqli_fetch_array(mysqli_query("SELECT COUNT(*) FROM
                                             (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
                                             FROM pesan p, pegawai pg, authorization a
                                             WHERE p.dari = pg.id_pegawai
@@ -242,7 +242,7 @@ $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
                 $aksi=0;
 
                 if($mulai&&$selesai&&$detail){
-                mysql_query("INSERT INTO cuti (id_pegawai, Nama, Departemen,Tanggal_Mulai, Tanggal_Selesai, Detail_cuti, Aksi) VALUES ('$idpegawai','$pegawai[Nama]', '$pegawai[Departemen]','$mulai','$selesai','$detail','$aksi')");}
+                mysqli_query("INSERT INTO cuti (id_pegawai, Nama, Departemen,Tanggal_Mulai, Tanggal_Selesai, Detail_cuti, Aksi) VALUES ('$idpegawai','$pegawai[Nama]', '$pegawai[Departemen]','$mulai','$selesai','$detail','$aksi')");}
                 else{}
                 ?>
                         <h1>Pengajuan Cuti</h1>
@@ -250,8 +250,8 @@ $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
                         <tr><td>Tanggal Mulai</td><td>Tanggal Selesai</td><td>Detail Cuti</td><td>Status</td></tr>
                         <?php
                         $sql = "SELECT * FROM cuti where id_pegawai='$idpegawai'";
-                        $hasil = mysql_query ($sql, $mysql_connect);
-                        while ($baris=mysql_fetch_array($hasil)){
+                        $hasil = mysqli_query ($sql, $mysqli_connect);
+                        while ($baris=mysqli_fetch_array($hasil)){
                         $mulai=$baris[7];
                         $selesai=$baris[8];
                         $detail=$baris[4];

@@ -56,8 +56,8 @@ if(!isset($_SESSION['username'])){
                          <?php 
 						$username=$_SESSION['username'];
 						$iduser=$_SESSION['idpegawai'];
-						$usersql = mysql_query("SELECT * FROM pegawai where id_pegawai='$iduser'"); 
-						$hasiluser=mysql_fetch_array($usersql);
+						$usersql = mysqli_query("SELECT * FROM pegawai where id_pegawai='$iduser'"); 
+						$hasiluser=mysqli_fetch_array($usersql);
 						?>
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
@@ -131,14 +131,14 @@ if(!isset($_SESSION['username'])){
                             <a href="pemesanan.php">
                                 <i class="fa fa-list-alt"></i> <span>Pemesanan</span>
 								<?php 
-								$not1=mysql_query("SELECT count(id_pemesanan) from pemesanan where status='0'");
-								$tot1=mysql_fetch_array($not1);
-								$not2=mysql_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='1' group by id_transaksi");
-								$tot2=mysql_fetch_array($not2);
-								$not3=mysql_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='4' group by id_transaksi");
-								$tot3=mysql_fetch_array($not3);
-								$not4=mysql_query("SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
-								$tot4=mysql_fetch_array($not4);
+								$not1=mysqli_query("SELECT count(id_pemesanan) from pemesanan where status='0'");
+								$tot1=mysqli_fetch_array($not1);
+								$not2=mysqli_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='1' group by id_transaksi");
+								$tot2=mysqli_fetch_array($not2);
+								$not3=mysqli_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='4' group by id_transaksi");
+								$tot3=mysqli_fetch_array($not3);
+								$not4=mysqli_query("SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
+								$tot4=mysqli_fetch_array($not4);
 								if($tot1['count(id_pemesanan)']!=0){
 								?>
 								 <small class="badge pull-right bg-yellow"><?php echo $tot1['count(id_pemesanan)']?></small>

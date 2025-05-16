@@ -3,10 +3,10 @@
 session_start();
 $username=$_SESSION['username'];
 $idpegawai=$_SESSION['idpegawai'];
-$cekuser=mysql_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'HR'");
-$user=mysql_fetch_array($cekuser);
-$getpegawai=mysql_query("SELECT * FROM pegawai where id_pegawai='$idpegawai'");
-$pegawai=mysql_fetch_array($getpegawai);
+$cekuser=mysqli_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'HR'");
+$user=mysqli_fetch_array($cekuser);
+$getpegawai=mysqli_query("SELECT * FROM pegawai where id_pegawai='$idpegawai'");
+$pegawai=mysqli_fetch_array($getpegawai);
 if($user['jmluser']=="0")
 {
 header("location:../index.php");
@@ -217,15 +217,15 @@ header("location:../index.php");
 				<?php
 				
 
-$tampil=mysql_query("select * from penggajian");
+$tampil=mysqli_query("select * from penggajian");
 
 
-$total_gaji = mysql_fetch_array(mysql_query("SELECT round(SUM(total)) AS JUMLAH
+$total_gaji = mysqli_fetch_array(mysqli_query("SELECT round(SUM(total)) AS JUMLAH
 FROM penggajian"));
 
 
 $i=0;
-while($row = mysql_fetch_array($tampil))
+while($row = mysqli_fetch_array($tampil))
 {
 $i++;
 echo "<tr>";

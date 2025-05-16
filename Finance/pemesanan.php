@@ -9,14 +9,14 @@ if(isset($_SESSION['username'])){
 	$username = $_SESSION['username'];
 }
 	include "../config.php";
-	$profil=mysql_fetch_array(mysql_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
-    //$bulan = mysql_fetch_array(mysql_query("SELECT DATE_FORMAT(NOW(),'%m') from DUAL"));
-    //$qsaldo = mysql_fetch_array(mysql_query("select * from saldo WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan[0]'"));
+    $profil=mysqli_fetch_array(mysqli_query($conn, "select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
+    //$bulan = mysqli_fetch_array(mysqli_query("SELECT DATE_FORMAT(NOW(),'%m') from DUAL"));
+    //$qsaldo = mysqli_fetch_array(mysqli_query("select * from saldo WHERE DATE_FORMAT( tanggal, '%m' ) = '$bulan[0]'"));
     
-    $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
-                                            (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
-                                            FROM pesan p, pegawai pg, authorization a
-                                            WHERE p.dari = pg.id_pegawai AND a.id_pegawai = p.ke AND a.username = '$username' AND p.status=0) PESAN"));
+    $count = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) FROM
+                                                (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
+                                                FROM pesan p, pegawai pg, authorization a
+                                                WHERE p.dari = pg.id_pegawai AND a.id_pegawai = p.ke AND a.username = '$username' AND p.status=0) PESAN"));
 ?>
 
 
@@ -246,17 +246,17 @@ if(isset($_SESSION['username'])){
                                         <?php
 
 
-                                        $transaksi = mysql_query("SELECT ID_TRANSAKSI, SUM(P.HARGA) TOTAL FROM TRANSAKSI T, PEMESANAN P
-                                                                WHERE T.ID_PEMESANAN = P.ID_PEMESANAN AND T.STATUS = 0
-                                                                GROUP BY ID_TRANSAKSI");
+                                        $transaksi = mysqli_query($conn, "SELECT ID_TRANSAKSI, SUM(P.HARGA) TOTAL FROM TRANSAKSI T, PEMESANAN P
+                                                                                                        WHERE T.ID_PEMESANAN = P.ID_PEMESANAN AND T.STATUS = 0
+                                                                                                        GROUP BY ID_TRANSAKSI");
 
 
-                                        while($t=mysql_fetch_array($transaksi)){
-                                            $query = mysql_query("SELECT t.id_transaksi, DATE_FORMAT(t.tanggal,'%d %b %Y') as tanggal, p.namabarang as barang, p.harga, s.nama as supplier 
-                                                                FROM transaksi t, pemesanan p, supplier s
-                                                                WHERE t.id_pemesanan = p.id_pemesanan AND t.id_supplier = s.id_supplier AND t.status = 0 AND t.id_transaksi=$t[0]");
+                                        while($t=mysqli_fetch_array($transaksi)){
+                                            $query = mysqli_query($conn, "SELECT t.id_transaksi, DATE_FORMAT(t.tanggal,'%d %b %Y') as tanggal, p.namabarang as barang, p.harga, s.nama as supplier 
+                                                                                                            FROM transaksi t, pemesanan p, supplier s
+                                                                                                            WHERE t.id_pemesanan = p.id_pemesanan AND t.id_supplier = s.id_supplier AND t.status = 0 AND t.id_transaksi=$t[0]");
 
-                                            while($pemesanan=mysql_fetch_array($query)){
+                                            while($pemesanan=mysqli_fetch_array($query)){
                                     
                                             ?>
                                             <tr>

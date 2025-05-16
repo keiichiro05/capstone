@@ -1,13 +1,27 @@
-<!DOCTYPE html>
-<?php include('../konekdb.php');
+<?php
+include('../konekdb.php');
 session_start();
-$username=$_SESSION['username'];
-$cekuser=mysql_query("SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'superadmin'");
-$user=mysql_fetch_array($cekuser);
-if($user['jmluser']=="0")
-{
-header("location:../index.php");
-};?>
+
+$username = $_SESSION['username'];
+
+// Gunakan koneksi mysqli
+$mysqli = mysqli_connect($server, $user, $password, "e-pharm");
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
+}
+$stmt = $mysqli->prepare("SELECT COUNT(username) as jmluser FROM authorization WHERE username = ? AND modul = 'superadmin'");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_array();
+$stmt->close();
+
+if ($user['jmluser'] == "0") {
+    header("Location: ../index.php");
+    exit();
+}
+?>
+
 <html>
     <head>
         <meta charset="UTF-8">
@@ -184,12 +198,15 @@ header("location:../index.php");
                                 $id=$_POST['id'];
                                 $username=$_POST['username'];
                                 $password=$_POST['password'];
-                                $modul=$_POST['modul'];
-
-                                echo $id.$username.$password.$modul;
-								if($id&&$username){
-                                mysql_query("INSERT INTO authorization (Username,id_pegawai,Password,Modul) VALUES ('$username','$id','$password','$modul')");
-								};
+                                $modul = $_POST['modul']; // Retrieve 'modul' from form input
+                    if ($id && $username && $modul) {
+                        $stmt = $mysqli->prepare("INSERT INTO authorization (Username, id_pegawai, Password, Modul) VALUES (?, ?, ?, ?)");
+                        $stmt->bind_param("ssss", $username, $id, $password, $modul);
+                        if (!$stmt->execute()) {
+                            echo "Error: " . $stmt->error;
+                        }
+                        $stmt->close();
+                    }
                             ?>
                         <h1>Tabel Hak Akses</h1>
                         <table class="table table-bordered table-striped">
@@ -198,10 +215,10 @@ header("location:../index.php");
                         error_reporting(0);
                         include "konekdb.php";
                         $sql = "SELECT * FROM authorization where id_pegawai!='99'";
-                        $hasil = mysql_query ($sql, $mysql_connect);
+                        $hasil = mysqli_query($mysqli, $sql);
                         $no=1;
                 
-                        while ($baris=mysql_fetch_array($hasil)){
+                        while ($baris=mysqli_fetch_array($hasil)){
                         $username=$baris[0];
                         $id=$baris[1];
                         $password=$baris[2];

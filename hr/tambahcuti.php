@@ -8,12 +8,12 @@ $Detail_cuti=$_GET['Detail_cuti'];
 
 if($a=="Diterima"){
 
-$show=mysql_query("update cuti set aksi='1' where id_pegawai='$id'"); 
+$show=mysqli_query("update cuti set aksi='1' where id_pegawai='$id'"); 
 if($show){
 header("location:cuti.php");
 }
 } else if($a=="Ditolak"){
-$del=mysql_query("update cuti set aksi='2' where id_pegawai='$id'"); 
+$del=mysqli_query("update cuti set aksi='2' where id_pegawai='$id'"); 
 if($del){
 header("location:cuti.php");
 }

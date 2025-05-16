@@ -10,23 +10,55 @@ if(!isset($_SESSION['username'])){
 if(isset($_SESSION['username'])){
 	$username = $_SESSION['username'];
 }
-	include "../config.php";
-	$profil=mysql_fetch_array(mysql_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
-    $pesan = mysql_query("SELECT id_pesan, pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p') as waktu, p.status, a.username
-                        FROM pesan p, pegawai pg, authorization a
-                        WHERE p.dari = pg.id_pegawai AND a.id_pegawai = p.ke AND a.username = '$username' AND p.draft=0
-                        ORDER BY waktu DESC");
-    $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
-                                            (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
-                                            FROM pesan p, pegawai pg, authorization a
-                                            WHERE p.dari = pg.id_pegawai AND a.id_pegawai = p.ke AND a.username = '$username' AND p.status=0) PESAN"));
-    $count_draft = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
-                                            (SELECT id_pesan, pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p') as waktu, p.status, a.username
-                                            FROM pesan p, pegawai pg, authorization a
-                                            WHERE p.ke = pg.id_pegawai AND a.id_pegawai = p.dari AND a.username = '$username' AND p.draft=1
-                                            ORDER BY waktu DESC) PESAN"));
+    include "../config.php";
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
 
-    $name = mysql_query("SELECT nama FROM pegawai p, authorization a WHERE a.id_pegawai = p.id_pegawai AND a.username NOT LIKE '$username'");
+// Fetch unread message count
+$stmt = $conn->prepare("SELECT COUNT(*) as count
+                        FROM pesan p 
+                        JOIN pegawai pg ON p.dari = pg.id_pegawai 
+                        JOIN authorization a ON a.id_pegawai = p.ke 
+                        WHERE a.username = ? AND p.status = 0");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+$count = $result->fetch_assoc();
+$stmt->close();
+
+// Fetch draft message count
+$stmt = $conn->prepare("SELECT COUNT(*) as total
+                        FROM pesan p 
+                        JOIN pegawai pg ON p.ke = pg.id_pegawai 
+                        JOIN authorization a ON a.id_pegawai = p.dari 
+                        WHERE a.username = ? AND p.draft = 1");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+$count_draft = $result->fetch_assoc();
+$stmt->close();
+
+// Fetch recipient names
+$stmt = $conn->prepare("SELECT nama 
+                        FROM pegawai p 
+                        JOIN authorization a ON a.id_pegawai = p.id_pegawai 
+                        WHERE a.username != ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$name = $stmt->get_result();
+$stmt->close();
+
+// Fetch messages
+$stmt = $conn->prepare("SELECT id_pesan, pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p') as waktu, p.status
+                        FROM pesan p 
+                        JOIN pegawai pg ON p.dari = pg.id_pegawai 
+                        JOIN authorization a ON a.id_pegawai = p.ke 
+                        WHERE a.username = ? AND p.draft = 0");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$pesan = $stmt->get_result();
+$stmt->close();
 ?>
 
 
@@ -166,25 +198,25 @@ if(isset($_SESSION['username'])){
                             <a href="pemesanan.php">
                                 <i class="fa fa-list-alt"></i> <span>Pemesanan</span>
 								<?php 
-								$not1=mysql_query("SELECT count(id_pemesanan) from pemesanan where status='0'");
-								$tot1=mysql_fetch_array($not1);
-								$not2=mysql_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='1' group by id_transaksi");
-								$tot2=mysql_fetch_array($not2);
-								$not3=mysql_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='4' group by id_transaksi");
-								$tot3=mysql_fetch_array($not3);
-								$not4=mysql_query("SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
-								$tot4=mysql_fetch_array($not4);
-								$not5=mysql_query("SELECT count(id_pesan) as jml from pesan where ke='$idpegawai' and status='0'");
-								$tot5=mysql_fetch_array($not5);
-								if($tot1['count(id_pemesanan)']!=0){
-								?>
-								 <small class="badge pull-right bg-yellow"><?php echo $tot1['count(id_pemesanan)']?></small>
+                                $not1=mysqli_query($conn, "SELECT count(id_pemesanan) as count from pemesanan where status='0'");
+                                $tot1=mysqli_fetch_array($not1);
+                                $not2=mysqli_query($conn, "SELECT count(distinct id_transaksi) as jml from transaksi where status='1'");
+                                $tot2=mysqli_fetch_array($not2);
+                                $not3=mysqli_query($conn, "SELECT count(distinct id_transaksi) as jml from transaksi where status='4'");
+                                $tot3=mysqli_fetch_array($not3);
+                                $not4=mysqli_query($conn, "SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
+                                $tot4=mysqli_fetch_array($not4);
+                                $not5=mysqli_query($conn, "SELECT count(id_pesan) as jml from pesan where ke='$idpegawai' and status='0'");
+                                $tot5=mysqli_fetch_array($not5);
+                                if($tot1['count']!=0){
+                                ?>
+                                 <small class="badge pull-right bg-yellow"><?php echo $tot1['count']?></small>
 								 <?php }?>
                             </a>
                         </li>
                         <li >
                             <a href="transaksi.php">
-                                <i class="fa fa-envelope"></i> <span>Perijinan Transaksi</span>
+                                <i class="fa fa-check-square"></i> <span>Perijinan Transaksi</span>
 								<?php if($tot2['jml']!=0){?>
 								<small class="badge pull-right bg-green"><?php echo $tot2['jml']?></small>
 								<?php }?>
@@ -192,7 +224,7 @@ if(isset($_SESSION['username'])){
                         </li>
                         <li>
                             <a href="laporan.php">
-                               <i class="fa fa-check-square"></i> <span>Laporan</span>
+                               <i class="fa fa-envelope"></i> <span>Laporan</span>
 								<?php if($tot3['jml']!=0){?>
                                 <small class="badge pull-right bg-red"><?php echo $tot3['jml']?></small>
 								<?php }?>
@@ -250,14 +282,14 @@ if(isset($_SESSION['username'])){
                                                     <li class="header">Folders</li>
                                                     <?php
                                                         $c = "";
-                                                        if($count[0]!=0)
-                                                            $c = "(".$count[0].")";
+                                                        if($count['count']!=0)
+                                                            $c = "(".$count['count'].")";
                                                         else
                                                             $c = "";
-
+                                                        
                                                         $cd = "";
-                                                        if($count_draft[0]!=0)
-                                                            $cd = "(".$count_draft[0].")";
+                                                        if($count_draft['total']!=0)
+                                                            $cd = "(".$count_draft['total'].")";
                                                         else
                                                             $cd = "";
                                                     ?>
@@ -306,7 +338,7 @@ if(isset($_SESSION['username'])){
                                                 <!-- THE MESSAGES -->
                                                 <table class="table table-mailbox">
                                                 <?php
-                                                while($p=mysql_fetch_array($pesan)){
+                                                while($p=mysqli_fetch_array($pesan)){
                                                     if($p['status']==0){
                                                         echo "<tr class=\"unread\">";
                                                     }else{
@@ -356,7 +388,7 @@ if(isset($_SESSION['username'])){
                                     <select name="nama" list="pegawai" class="form-control" placeholder="Name" required>                          
                                     
                                     <?php
-                                        while($n=mysql_fetch_array($name)){
+                                        while($n=mysqli_fetch_array($name)){
                                     ?>
                                       <option value="<?php echo $n[0];?>"><?php echo $n[0];?></option>
                                     <?php

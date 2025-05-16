@@ -57,8 +57,8 @@ if(!isset($_SESSION['username'])){
                         <?php 
 						$username=$_SESSION['username'];
 						$iduser=$_SESSION['idpegawai'];
-						$usersql = mysql_query("SELECT * FROM pegawai where id_pegawai='$iduser'"); 
-						$hasiluser=mysql_fetch_array($usersql);
+                        $usersql = mysqli_query($mysqli, "SELECT * FROM pegawai WHERE id_pegawai='$iduser'"); 
+                        $hasiluser = mysqli_fetch_array($usersql);
 						?>
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
@@ -179,16 +179,16 @@ if(!isset($_SESSION['username'])){
 
 <?php include "konekdb.php";
 $sql = "SELECT id_pemasukan FROM pemasukan order by id_pemasukan DESC limit 1";
-$id = mysql_query ($sql, $mysql_connect);
-$idmasuk=mysql_fetch_array($id);
+$id = mysqli_query($mysqli, $sql);
+$idmasuk = mysqli_fetch_array($id);
 $idmasuk1=$idmasuk['id_pemasukan'];
 $idmasuk11=$idmasuk1+1;
  ?>
 
 <datalist id="namaobat">
 <?php
-$obat = mysql_query("SELECT Nama FROM warehouse");
-while($obat1 = mysql_fetch_array($obat)){
+$obat = mysqli_query($mysqli, "SELECT Nama FROM warehouse");
+while($obat1 = mysqli_fetch_array($obat)) {
 echo "<option value=\"$obat1[Nama]\"></option>"; 
 }
 ?>
@@ -275,12 +275,12 @@ echo "<div class=\"box\">
                                         <tbody>";
 
 $sql1 = "SELECT * FROM penjualan where id_pemasukan='$idmasuk11'";
-$tm = mysql_query ($sql1, $mysql_connect);
-if(mysql_num_rows($tm)>0){
-   while ($tmpl=mysql_fetch_array($tm)){
-   $sql2 = "SELECT * FROM warehouse where id_barang='$tmpl[id_barang]'";
-   $tm2 = mysql_query ($sql2, $mysql_connect);
-   $tmpl2= mysql_fetch_array($tm2);
+$tm = mysqli_query($mysqli, $sql1);
+if(mysqli_num_rows($tm) > 0) {
+   while ($tmpl = mysqli_fetch_array($tm)) {
+   $sql2 = "SELECT * FROM warehouse WHERE id_barang='$tmpl[id_barang]'";
+$tm2 = mysqli_query($mysqli, $sql2);
+   $tmpl2 = mysqli_fetch_array($tm2);
    $idbrg=$tmpl['id_barang'];
    $nmobat1=$tmpl2['Nama'];
    $hrg1=$tmpl2['Harga'];

@@ -6,8 +6,8 @@ $pesan = $_POST['message'];
 
 include '../config.php';
 
-$nama1 = mysql_fetch_array(mysql_query("SELECT id_pegawai from pegawai WHERE nama='$to'"));
-$nama2 = mysql_fetch_array(mysql_query("SELECT id_pegawai from authorization WHERE username='$from'"));
+$nama1 = mysqli_fetch_array(mysqli_query("SELECT id_pegawai from pegawai WHERE nama='$to'"));
+$nama2 = mysqli_fetch_array(mysqli_query("SELECT id_pegawai from authorization WHERE username='$from'"));
 //echo $nama1[0].$nama2[0].$pesan;
 
 
@@ -18,7 +18,7 @@ else{
      $sql = "INSERT INTO pesan VALUES ('',$nama2[0],$nama1[0],'$pesan',NOW(),1,0)";
  }
 
-$hasil = mysql_query($sql);
+$hasil = mysqli_query($sql);
 
 
 if($hasil){

@@ -57,8 +57,8 @@ if(!isset($_SESSION['username'])){
                          <?php 
 						$username=$_SESSION['username'];
 						$iduser=$_SESSION['idpegawai'];
-						$usersql = mysql_query("SELECT * FROM pegawai where id_pegawai='$iduser'"); 
-						$hasiluser=mysql_fetch_array($usersql);
+						$usersql = mysqli_query($mysqli, "SELECT * FROM pegawai where id_pegawai='$iduser'"); 
+						$hasiluser=mysqli_fetch_array($usersql);
 						?>
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
@@ -207,10 +207,10 @@ if(!isset($_SESSION['username'])){
 include "konekdb.php";
 $idmasuk = $_GET['idmasuk'];
 
-$sql1 = mysql_query ("SELECT * FROM penjualan where id_pemasukan='$idmasuk'");
-   while ($tmpl=mysql_fetch_array($sql1)){
-	$sql2 = mysql_query("SELECT * FROM warehouse where id_barang='$tmpl[id_barang]'");
-	$tmpl2= mysql_fetch_array($sql2);
+$sql1 = mysqli_query ($mysqli, "SELECT * FROM penjualan where id_pemasukan='$idmasuk'");
+   while ($tmpl=mysqli_fetch_array($sql1)){
+	$sql2 = mysqli_query($mysqli, "SELECT * FROM warehouse where id_barang='$tmpl[id_barang]'");
+	$tmpl2= mysqli_fetch_array($sql2);
     $nama1=$tmpl2['Nama'];
 	$jumlah=$tmpl['jumlah'];
 	$tot=$tmpl['total'];

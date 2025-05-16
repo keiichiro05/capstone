@@ -18,26 +18,26 @@ if(isset($_SESSION['username'])){
 
     
     
-        $pesan = mysql_fetch_array(mysql_query("SELECT id_pesan, pg.nama, isi, DATE_FORMAT( waktu, '%d %b %Y %h:%i %p' ) AS waktu
+        $pesan = mysqli_fetch_array(mysqli_query("SELECT id_pesan, pg.nama, isi, DATE_FORMAT( waktu, '%d %b %Y %h:%i %p' ) AS waktu
                         FROM pesan p, pegawai pg
                         WHERE p.ke = pg.id_pegawai AND id_pesan = $id"));
     
 
-	$profil=mysql_fetch_array(mysql_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
+	$profil=mysqli_fetch_array(mysqli_query("select p.*,DATE_FORMAT( p.Tanggal_Masuk, '%b, %Y') as tglmasuk from pegawai p,authorization a where a.username='$username' and a.id_pegawai = p.id_pegawai"));
     
-    $count = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
+    $count = mysqli_fetch_array(mysqli_query("SELECT COUNT(*) FROM
                                             (SELECT pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p'), p.status, a.username
                                             FROM pesan p, pegawai pg, authorization a
                                             WHERE p.dari = pg.id_pegawai
                                             AND a.id_pegawai = p.ke
                                             AND a.username = '$username' AND p.status=0) PESAN"));
-    $count_draft = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM
+    $count_draft = mysqli_fetch_array(mysqli_query("SELECT COUNT(*) FROM
                                             (SELECT id_pesan, pg.nama, isi, DATE_FORMAT(waktu,'%d %b %Y %h:%i %p') as waktu, p.status, a.username
                                             FROM pesan p, pegawai pg, authorization a
                                             WHERE p.ke = pg.id_pegawai AND a.id_pegawai = p.dari AND a.username = '$username' AND p.draft=1
                                             ORDER BY waktu DESC) PESAN"));
 
-    $name = mysql_query("SELECT nama FROM pegawai p, authorization a WHERE a.id_pegawai = p.id_pegawai AND a.username NOT LIKE '$username'");
+    $name = mysqli_query("SELECT nama FROM pegawai p, authorization a WHERE a.id_pegawai = p.id_pegawai AND a.username NOT LIKE '$username'");
 ?>
 
 
@@ -177,16 +177,16 @@ if(isset($_SESSION['username'])){
                             <a href="pemesanan.php">
                                 <i class="fa fa-list-alt"></i> <span>Pemesanan</span>
 								<?php 
-								$not1=mysql_query("SELECT count(id_pemesanan) from pemesanan where status='0'");
-								$tot1=mysql_fetch_array($not1);
-								$not2=mysql_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='1' group by id_transaksi");
-								$tot2=mysql_fetch_array($not2);
-								$not3=mysql_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='4' group by id_transaksi");
-								$tot3=mysql_fetch_array($not3);
-								$not4=mysql_query("SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
-								$tot4=mysql_fetch_array($not4);
-								$not5=mysql_query("SELECT count(id_pesan) as jml from pesan where ke='$idpegawai' and status='0'");
-								$tot5=mysql_fetch_array($not5);
+								$not1=mysqli_query("SELECT count(id_pemesanan) from pemesanan where status='0'");
+								$tot1=mysqli_fetch_array($not1);
+								$not2=mysqli_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='1' group by id_transaksi");
+								$tot2=mysqli_fetch_array($not2);
+								$not3=mysqli_query("SELECT count(distinct id_transaksi) as jml from transaksi where status='4' group by id_transaksi");
+								$tot3=mysqli_fetch_array($not3);
+								$not4=mysqli_query("SELECT count(id_pegawai) as jml from cuti where aksi='1' and id_pegawai='$idpegawai'");
+								$tot4=mysqli_fetch_array($not4);
+								$not5=mysqli_query("SELECT count(id_pesan) as jml from pesan where ke='$idpegawai' and status='0'");
+								$tot5=mysqli_fetch_array($not5);
 								if($tot1['count(id_pemesanan)']!=0){
 								?>
 								 <small class="badge pull-right bg-yellow"><?php echo $tot1['count(id_pemesanan)']?></small>
@@ -340,7 +340,7 @@ if(isset($_SESSION['username'])){
                                     <select name="nama" list="pegawai" class="form-control" placeholder="Name" required>                          
                                     
                                     <?php
-                                        while($n=mysql_fetch_array($name)){
+                                        while($n=mysqli_fetch_array($name)){
                                     ?>
                                       <option value="<?php echo $n[0];?>"><?php echo $n[0];?></option>
                                     <?php
