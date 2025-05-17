@@ -140,6 +140,11 @@ header("location:../index.php");
                                 <i class="fa fa-th"></i> <span>Order</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="history_order.php">
+                                <i class="fa fa-history" aria-hidden="true"></i> <span>History Order</span>
+                            </a>
+                        </li>
 						<li class="active">
                             <a href="cuti.php">
                                 <i class="fa fa-suitcase"></i> <span>Cuti</span>
