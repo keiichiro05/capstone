@@ -1,382 +1,470 @@
-<!DOCTYPE html>
-<?php include('../konekdb.php');
-session_start();
-$username = $_SESSION['username'];
-$idpegawai = $_SESSION['idpegawai'];
-$cekuser = mysqli_query($mysqli, "SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'Adminwarehouse'");
-$user = mysqli_fetch_array($cekuser);
-$getpegawai = mysqli_query($mysqli, "SELECT * FROM pegawai where id_pegawai='$idpegawai'");
-$pegawai = mysqli_fetch_array($getpegawai);
-if ($user['jmluser'] == "0") {
-    header("location:../index.php");
-}; ?>
-<html>
+    <!DOCTYPE html>
+    <?php 
+    include('../konekdb.php');
+    session_start();
+    $username = $_SESSION['username'];
+    $idpegawai = $_SESSION['idpegawai'];
+    $cekuser = mysqli_query($mysqli, "SELECT count(username) as jmluser FROM authorization WHERE username = '$username' AND modul = 'Adminwarehouse'");
+    $user = mysqli_fetch_array($cekuser);
+    $getpegawai = mysqli_query($mysqli, "SELECT * FROM pegawai where id_pegawai='$idpegawai'");
+    $pegawai = mysqli_fetch_array($getpegawai);
+    if ($user['jmluser'] == "0") {
+        header("location:../index.php");
+    }; ?>
+    <html>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Warehouse</title>
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <!-- bootstrap 3.0.2 -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <!-- font Awesome -->
-    <link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <!-- Ionicons -->
-    <link href="../css/ionicons.min.css" rel="stylesheet" type="text/css" />
-    <!-- DataTables -->
-    <link href="../css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
-    <!-- Theme style -->
-    <link href="../css/AdminLTE.css" rel="stylesheet" type="text/css" />
+    <head>
+        <meta charset="UTF-8">
+        <title>Admin Warehouse</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <!-- font Awesome -->
+        <link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <!-- Ionicons -->
+        <link href="../css/ionicons.min.css" rel="stylesheet" type="text/css" />
+        <!-- DataTables -->
+        <link href="../css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+        <!-- Theme style -->
+        <link href="../css/AdminLTE.css" rel="stylesheet" type="text/css" />
+        <link href="../css/modern-3d.css" rel="stylesheet" type="text/css" />
+        <style>
+            .order-history-container {
+                background: #fff;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            }
+            
+            .filter-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .filter-form {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .order-history-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            
+            .order-history-table th {
+                background-color:rgb(6, 57, 134);
+                padding: 12px 15px;
+                text-align: left;
+                font-weight: 600;
+                border-bottom: 2px solid #ddd;
+            }
+            
+            .order-history-table td {
+                padding: 12px 15px;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .order-history-table tr:hover {
+                background-color: #f9f9f9;
+            }
+            
+            .order-history-table tr:nth-child(even) {
+                background-color: #fafafa;
+            }
+            
+            .status-badge {
+                padding: 5px 10px;
+                border-radius: 3px;
+                font-weight: bold;
+                font-size: 12px;
+                display: inline-block;
+            }
+            
+            .status-pending {
+                background-color: #f39c12;
+                color: white;
+            }
+            
+            .status-accepted {
+                background-color: #00a65a;
+                color: white;
+            }
+            
+            .status-declined {
+                background-color: #dd4b39;
+                color: white;
+            }
+            
+            .empty-state {
+                text-align: center;
+                padding: 40px 0;
+                color: #777;
+            }
+            
+            .empty-state i {
+                font-size: 50px;
+                margin-bottom: 15px;
+                color: #ddd;
+            }
+            
+            .empty-state h4 {
+                margin: 10px 0;
+                font-weight: 600;
+            }
+            
+            .order-date {
+                white-space: nowrap;
+            }
+            
+            .total-records .badge {
+                padding: 5px 10px;
+                font-size: 12px;
+                border-radius: 10px;
+            }
+        </style>    
+    </head>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-</head>
-
-<body class="skin-blue">
-    <!-- header logo: style can be found in header.less -->
-    <header class="header">
-        <a href="index.html" class="logo">
-            <!-- Add the class icon to your logo image or logo icon to add the margining -->
-            E-Pharm
-        </a>
-        <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar navbar-static-top" role="navigation">
-            <!-- Sidebar toggle button-->
-            <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <div class="navbar-right">
-                <ul class="nav navbar-nav">
-                    <!-- User Account: style can be found in dropdown.less -->
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicon glyphicon-user"></i>
-                            <span><?php echo $username; ?><i class="caret"></i></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <!-- User image -->
-                            <li class="user-header bg-light-blue">
-                                <img src="img/<?php echo $pegawai['foto']; ?>" class="img-circle" alt="User Image" />
-                                <p>
-                                    <?php
-                                    echo $pegawai['Nama'] . " - " . $pegawai['Jabatan'] . " " . $pegawai['Departemen']; ?>
-                                    <small>Member since <?php echo "$pegawai[Tanggal_Masuk]"; ?></small>
-                                </p>
-                            </li>
-                            <!-- Menu Body -->
-                            <li class="user-body">
-                                <div class="col-xs-4 text-center">
-                                    <a href="#">Admin</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <a href="#">Warehouse</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <a href="#"></a>
-                                </div>
-                            </li>
-                            <!-- Menu Footer-->
-                            <li class="user-footer">
-                                <div class="pull-left">
-                                    <a href="profil.php" class="btn btn-default btn-flat">Profile</a>
-                                </div>
-                                <div class="pull-right">
-                                    <a href="logout.php" class="btn btn-default btn-flat">Sign out</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    <div class="wrapper row-offcanvas row-offcanvas-left">
-        <!-- Left side column. contains the logo and sidebar -->
-        <aside class="left-side sidebar-offcanvas">
-            <!-- sidebar: style can be found in sidebar.less -->
-            <section class="sidebar">
-                <!-- Sidebar user panel -->
-                <div class="user-panel">
-                    <div class="pull-left image">
-                        <img src="img/<?php echo $pegawai['foto']; ?>" class="img-circle" alt="User Image" />
-                    </div>
-                    <div class="pull-left info">
-                        <p>Hello, <?php echo $username; ?></p>
-
-                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                    </div>
-                </div>
-                <!-- /.search form -->
-                <!-- sidebar menu: : style can be found in sidebar.less -->
-                <ul class="sidebar-menu">
-                    <li class="active">
-                        <a href="dashboard.php">
-                            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="active">
-                        <a href="index.php">
-                            <i class="fa fa-list"></i> <span>Daftar Pesanan</span>
-                        </a>
-                    </li>
-
-                    <li class="active">
-                        <a href="daftarACC.php">
-                            <i class="fa fa-th"></i> <span>Daftar ACC</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="cuti.php">
-                            <i class="fa fa-suitcase"></i> <span>Cuti</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="mailbox.php">
-                            <i class="fa fa-comments"></i> <span>Mailbox</span>
-                        </a>
-                    </li>
-                </ul>
-            </section>
-            <!-- /.sidebar -->
-        </aside>
-
-        <!-- Right side column. Contains the navbar and content of the page -->
-        <aside class="right-side">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    Warehouse
-                    <small>Daftar Pesanan Barang</small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Daftar Pesanan</li>
-                </ol>
-            </section>
-
-            <!-- Main content -->
-            <section class="content">
-                <?php
-                if (isset($_SESSION['message'])) {
-                    echo '<div class="alert alert-info alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            ' . $_SESSION['message'] . '
-                          </div>';
-                    unset($_SESSION['message']);
-                }
-                ?>
-
-                <div class="box box-primary">
-                    <div class="box-header">
-                        <h3 class="box-title">Daftar Pesanan Barang</h3>
-                        <div class="box-tools pull-right">
-                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        </div>
-                    </div><!-- /.box-header -->
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-inline" style="margin-bottom: 15px;">
-                                    <div class="form-group">
-                                        <label for="filterStatus">Filter Status: </label>
-                                        <select id="filterStatus" class="form-control input-sm">
-                                            <option value="">Semua Status</option>
-                                            <option value="Pending">Pending</option>
-                                            <option value="Accepted">Accepted</option>
-                                            <option value="Declined">Declined</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group" style="margin-left: 10px;">
-                                        <label for="filterCabang">Filter Cabang: </label>
-                                        <select id="filterCabang" class="form-control input-sm">
-                                            <option value="">Semua Cabang</option>
-                                            <?php
-                                            $cabangQuery = mysqli_query($mysqli, "SELECT DISTINCT cabang FROM pemesanan WHERE cabang IS NOT NULL AND cabang != ''");
-                                            while ($cabang = mysqli_fetch_array($cabangQuery)) {
-                                                echo '<option value="' . htmlspecialchars($cabang['cabang']) . '">' . htmlspecialchars($cabang['cabang']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group" style="margin-left: 10px;">
-                                        <label for="filterKategori">Filter Kategori: </label>
-                                        <select id="filterKategori" class="form-control input-sm">
-                                            <option value="">Semua Kategori</option>
-                                            <?php
-                                            $kategoriQuery = mysqli_query($mysqli, "SELECT DISTINCT kategori FROM pemesanan WHERE kategori IS NOT NULL AND kategori != ''");
-                                            while ($kategori = mysqli_fetch_array($kategoriQuery)) {
-                                                echo '<option value="' . htmlspecialchars($kategori['kategori']) . '">' . htmlspecialchars($kategori['kategori']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <button id="resetFilter" class="btn btn-default btn-sm" style="margin-left: 10px;">
-                                        <i class="fa fa-refresh"></i> Reset Filter
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table id="pesananTable" class="table table-bordered table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>ID Pemesanan</th>
-                                            <th>Kode Barang</th>
-                                            <th>Nama Barang</th>
-                                            <th>Kategori</th>
-                                            <th>Jumlah</th>
-                                            <th>Satuan</th>
-                                            <th>ID Supplier</th>
-                                            <th>Cabang</th>
-                                            <th>Tanggal</th>
-                                            <th>Status</th>
-                                            <th width="15%">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+    <body class="skin-blue">
+        <header class="header">
+            <a href="index.html" class="logo">Admin Warehouse</a>
+                <div class="navbar-right">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="glyphicon glyphicon-user"></i>
+                                <span><?php echo $username; ?><i class="caret"></i></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="user-header bg-light-blue">
+                                    <img src="img/<?php echo $pegawai['foto']; ?>" class="img-circle" alt="User Image" />
+                                    <p>
                                         <?php
-                                        $sql = "SELECT * FROM pemesanan ORDER BY status, tanggal DESC";
-                                        $hasil = mysqli_query($mysqli, $sql);
-
-                                        if (mysqli_num_rows($hasil) > 0) {
-                                            while ($baris = mysqli_fetch_array($hasil)) {
-                                                $statusText = '';
-                                                $statusClass = '';
-                                                if ($baris['status'] == 0) {
-                                                    $statusText = 'Pending';
-                                                    $statusClass = 'warning';
-                                                } elseif ($baris['status'] == 1) {
-                                                    $statusText = 'Accepted';
-                                                    $statusClass = 'success';
-                                                } elseif ($baris['status'] == 2) {
-                                                    $statusText = 'Declined';
-                                                    $statusClass = 'danger';
-                                                }
-                                                
-                                                echo "<tr>
-                                                    <td>" . $baris['id_pemesanan'] . "</td>
-                                                    <td>" . htmlspecialchars($baris['code']) . "</td>
-                                                    <td>" . htmlspecialchars($baris['namabarang']) . "</td>
-                                                    <td>" . htmlspecialchars($baris['kategori']) . "</td>
-                                                    <td class='text-right'>" . number_format($baris['jumlah'], 0, ',', '.') . "</td>
-                                                    <td>" . htmlspecialchars($baris['satuan']) . "</td>
-                                                    <td>" . htmlspecialchars($baris['id_supplier']) . "</td>
-                                                    <td>" . htmlspecialchars($baris['cabang']) . "</td>
-                                                    <td>" . date('d/m/Y', strtotime($baris['tanggal'])) . "</td>
-                                                    <td><span class='label label-$statusClass'>$statusText</span></td>
-                                                    <td>";
-                                                
-                                                if ($baris['status'] == 0) {
-                                                    echo "<div class='btn-group'>
-                                                            <a href='proses_pesanan.php?action=accept&id=" . $baris['id_pemesanan'] . "' class='btn btn-success btn-xs' title='Accept'><i class='fa fa-check'></i></a>
-                                                            <a href='proses_pesanan.php?action=decline&id=" . $baris['id_pemesanan'] . "' class='btn btn-danger btn-xs' title='Decline'><i class='fa fa-times'></i></a>
-                                                          </div>";
-                                                } else {
-                                                    echo "<span class='text-muted small'>Proses selesai</span>";
-                                                }
-                                                echo "</td></tr>";
-                                            }
-                                        } else {
-                                            echo "<tr><td colspan='11' class='text-center'>Tidak ada data pesanan</td></tr>";
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        echo $pegawai['Nama'] . " - " . $pegawai['Jabatan'] . " " . $pegawai['Departemen']; ?>
+                                        <small>Member since <?php echo "$pegawai[Tanggal_Masuk]"; ?></small>
+                                    </p>
+                                </li>
+                                <li class="user-body">
+                                    <div class="col-xs-4 text-center">
+                                        <a href="#">Admin</a>
+                                    </div>
+                                    <div class="col-xs-4 text-center">
+                                        <a href="#">Warehouse</a>
+                                    </div>
+                                    <div class="col-xs-4 text-center">
+                                        <a href="#"></a>
+                                    </div>
+                                </li>
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="profil.php" class="btn btn-default btn-flat">Profile</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="logout.php" class="btn btn-default btn-flat">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <aside class="left-side sidebar-offcanvas">
+                <section class="sidebar">
+                    <div class="user-panel">
+                        <div class="pull-left image">
+                            <img src="img/<?php echo $pegawai['foto']; ?>" class="img-circle" alt="User Image" />
                         </div>
-                    </div><!-- /.box-body -->
-                    <div class="box-footer">
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <div class="dataTables_info" id="pesananTable_info" role="status" aria-live="polite"></div>
-                            </div>
-                            <div class="col-sm-7">
-                                <div class="dataTables_paginate paging_simple_numbers" id="pesananTable_paginate"></div>
-                            </div>
+                        <div class="pull-left info">
+                            <p>Hello, <?php echo $username; ?></p>
+                            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                         </div>
-                    </div><!-- /.box-footer -->
-                </div><!-- /.box -->
-            </section><!-- /.content -->
-        </aside><!-- /.right-side -->
-    </div><!-- ./wrapper -->
+                    </div>
+                    <ul class="sidebar-menu">
+                        <li>
+                            <a href="dashboard.php">
+                                <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="index.php">
+                                <i class="fa fa-list"></i> <span>List Order</span>
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="daftarACC.php">
+                                <i class="fa fa-th"></i> <span>Order History</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="cuti.php">
+                                <i class="fa fa-suitcase"></i> <span>Leave</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailbox.php">
+                                <i class="fa fa-comments"></i> <span>Mailbox</span>
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+            </aside>
 
-    <!-- jQuery 2.0.2 -->
-    <script src="../js/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="../js/bootstrap.min.js" type="text/javascript"></script>
-    <!-- DataTables -->
-    <script src="../js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
-    <script src="../js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
-    <!-- AdminLTE App -->
-    <script src="../js/AdminLTE/app.js" type="text/javascript"></script>
+            <aside class="right-side">
+                <section class="content-header">
+                    <h1>
+                        Approved Orders
+                        <small>Admin Warehouse</small>
+                    </h1>
+                </section>
 
-    <script>
-        $(document).ready(function() {
-            // Initialize DataTable with more options
-            var table = $('#pesananTable').DataTable({
-                "language": {
-                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
-                    "zeroRecords": "Data tidak ditemukan",
-                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                    "infoEmpty": "Tidak ada data tersedia",
-                    "infoFiltered": "(difilter dari _MAX_ total data)",
-                    "search": "Cari:",
-                    "paginate": {
-                        "first": "Pertama",
-                        "last": "Terakhir",
-                        "next": "Berikutnya",
-                        "previous": "Sebelumnya"
+                <section class="content">
+                    <?php
+                    if (isset($_SESSION['message'])) {
+                        echo '<div class="alert alert-info alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                ' . $_SESSION['message'] . '
+                            </div>';
+                        unset($_SESSION['message']);
                     }
-                },
-                "dom": '<"top"lf>rt<"bottom"ip><"clear">',
-                "pageLength": 10,
-                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Semua"]],
-                "stateSave": true,
-                "responsive": true,
-                "autoWidth": false,
-                "order": [[8, 'desc']] // Default sort by Tanggal descending
-            });
+                    ?>
 
-            // Custom filter for Status (using text instead of value)
-            $('#filterStatus').on('change', function() {
-                var status = $(this).val();
-                if (status === '') {
-                    table.column(9).search('').draw();
-                } else {
-                    table.column(9).search('^' + status + '$', true, false).draw();
+                    <div class="order-history-container">
+                        <div class="filter-container">
+                            <div class="filter-form">
+                                <button id="exportExcel" class="btn btn-success" title="Download as Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+                                <button id="exportCSV" class="btn btn-info" title="Download as CSV"><i class="fa fa-file-text-o"></i> CSV</button>
+                                <button id="exportPDF" class="btn btn-danger" title="Download as PDF"><i class="fa fa-file-pdf-o"></i> PDF</button>
+                                <form method="get" action="daftarACC.php" class="form-inline">
+                                    <select name="status" class="form-control">
+                                        <option value="">All Statuses</option>
+                                        <option value="0" <?php echo (isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : ''); ?>>Pending</option>
+                                        <option value="1" <?php echo (isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : ''); ?>>Accepted</option>
+                                        <option value="2" <?php echo (isset($_GET['status']) && $_GET['status'] == '2' ? 'selected' : ''); ?>>Declined</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-filter"></i> Filter
+                                    </button>
+                                    <?php if(isset($_GET['status'])): ?>
+                                        <a href="daftarACC.php" class="btn btn-default">
+                                            <i class="fa fa-times"></i> Clear
+                                        </a>
+                                    <?php endif; ?>
+                                </form>
+                            </div>
+                            <div class="total-records">
+                                <?php
+                                $count_query = "SELECT COUNT(*) as total FROM pemesanan";
+                                if (isset($_GET['status']) && $_GET['status'] != '') {
+                                    $status = mysqli_real_escape_string($mysqli, $_GET['status']);
+                                    $count_query .= " WHERE status = '$status'";
+                                }
+                                $count_result = mysqli_query($mysqli, $count_query);
+                                $count_row = mysqli_fetch_assoc($count_result);
+                                echo "<span class='badge bg-blue'>{$count_row['total']} records found</span>";
+                                ?>
+                            </div>
+                        </div>
+                        
+                                <div class="table-responsive">
+                                <table class="order-history-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Order ID</th>
+                                        <th>Order Date</th>
+                                        <th>Item Name</th>
+                                        <th>Category</th>
+                                        <th>Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Supplier</th>
+                                        <th>Branch</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $query = "SELECT p.*, s.Nama as supplier_name 
+                                            FROM pemesanan p
+                                            LEFT JOIN supplier s ON p.id_supplier = s.id_supplier";
+                                    
+                                    if (isset($_GET['status']) && $_GET['status'] != '') {
+                                        $status = mysqli_real_escape_string($mysqli, $_GET['status']);
+                                        $query .= " WHERE p.status = '$status'";
+                                    }
+                                    
+                                    $query .= " ORDER BY p.tanggal DESC";
+                                    
+                                    // Add simple pagination
+                                    $per_page = 5;
+                                    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                                    $start = ($page - 1) * $per_page;
+                                    $query .= " LIMIT $start, $per_page";
+                                    
+                                    $result = mysqli_query($mysqli, $query);
+                                    $no = $start + 1;
+                                    
+                                    if (mysqli_num_rows($result) > 0) {
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            echo "<tr>
+                                                <td>{$no}</td>
+                                                <td>{$row['id_pemesanan']}</td>
+                                                <td class='order-date'>".date('d M Y H:i', strtotime($row['tanggal']))."</td>
+                                                <td>{$row['namabarang']}</td>
+                                                <td>{$row['kategori']}</td>
+                                                <td>{$row['jumlah']}</td>
+                                                <td>{$row['satuan']}</td>
+                                                <td>".($row['supplier_name'] ? $row['supplier_name'] : $row['id_supplier'])."</td>
+                                                <td>{$row['cabang']}</td>
+                                                <td>";
+                                            
+                                            if ($row['status'] == '1') {
+                                                echo "<span class='status-badge status-accepted'>Accepted</span>";
+                                            } elseif ($row['status'] == '2') {
+                                                echo "<span class='status-badge status-declined'>Declined</span>";
+                                            } elseif ($row['status'] == '0') {
+                                                echo "<span class='status-badge status-pending'>Pending</span>";
+                                            }
+                                            
+                                            echo "</td>
+                                                <td>";
+                                            
+                                            if ($row['status'] == '0') {
+                                                echo "<a href='proses_pesanan.php?action=accept&id=" . $row['id_pemesanan'] . "' class='btn btn-success btn-xs' title='Accept'><i class='fa fa-check'></i></a>
+                                                    <a href='proses_pesanan.php?action=decline&id=" . $row['id_pemesanan'] . "' class='btn btn-danger btn-xs' title='Decline'><i class='fa fa-times'></i></a>";
+                                            } else {
+                                                echo "<span class='text-muted small'>Process completed</span>";
+                                            }
+                                            
+                                            echo "</td>
+                                            </tr>";
+                                            $no++;
+                                        }
+                                    } else {
+                                        echo "<tr>
+                                            <td colspan='11'>
+                                                <div class='empty-state'>
+                                                    <i class='fa fa-inbox'></i>
+                                                    <h4>No Orders Found</h4>
+                                                    <p>There are no orders matching your criteria</p>
+                                                </div>
+                                            </td>
+                                        </tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Simple pagination -->
+                        <div class="text-center">
+                            <?php
+                            $total_query = "SELECT COUNT(*) as total FROM pemesanan";
+                            if (isset($_GET['status']) && $_GET['status'] != '') {
+                                $status = mysqli_real_escape_string($mysqli, $_GET['status']);
+                                $total_query .= " WHERE status = '$status'";
+                            }
+                            $total_result = mysqli_query($mysqli, $total_query);
+                            $total_row = mysqli_fetch_assoc($total_result);
+                            $total_pages = ceil($total_row['total'] / $per_page);
+                            
+                            if ($total_pages > 1) {
+                                echo '<ul class="pagination">';
+                                
+                                // Previous button
+                                if ($page > 1) {
+                                    $prev = $page - 1;
+                                    echo '<li><a href="daftarACC.php?page='.$prev.(isset($_GET['status']) ? '&status='.$_GET['status'] : '').'">«</a></li>';
+                                }
+                                
+                                // Page numbers
+                                for ($i = 1; $i <= $total_pages; $i++) {
+                                    $active = ($i == $page) ? 'class="active"' : '';
+                                    echo '<li '.$active.'><a href="daftarACC.php?page='.$i.(isset($_GET['status']) ? '&status='.$_GET['status'] : '').'">'.$i.'</a></li>';
+                                }
+                                
+                                // Next button
+                                if ($page < $total_pages) {
+                                    $next = $page + 1;
+                                    echo '<li><a href="daftarACC.php?page='.$next.(isset($_GET['status']) ? '&status='.$_GET['status'] : '').'">»</a></li>';
+                                }
+                                
+                                echo '</ul>';
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </div>
+        <!-- Export Buttons -->
+
+        <!-- SheetJS & jsPDF CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+        <script>
+        function getTableData() {
+            var table = document.querySelector('.order-history-table');
+            var data = [];
+            var rows = table.querySelectorAll('tr');
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll('th,td');
+                for (var j = 0; j < cols.length; j++) {
+                    row.push(cols[j].innerText.trim());
                 }
+                data.push(row);
+            }
+            return data;
+        }
+
+        // Excel Export
+        document.getElementById('exportExcel').onclick = function() {
+            var data = getTableData();
+            var ws = XLSX.utils.aoa_to_sheet(data);
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Orders");
+            XLSX.writeFile(wb, "orders.xlsx");
+        };
+
+        // CSV Export
+        document.getElementById('exportCSV').onclick = function() {
+            var data = getTableData();
+            var ws = XLSX.utils.aoa_to_sheet(data);
+            var csv = XLSX.utils.sheet_to_csv(ws);
+            var blob = new Blob([csv], {type: "text/csv"});
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "orders.csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        // PDF Export
+        document.getElementById('exportPDF').onclick = function() {
+            var data = getTableData();
+            var doc = new jspdf.jsPDF('l', 'pt', 'a4');
+            doc.text("Order List", 40, 30);
+            doc.autoTable({
+                head: [data[0]],
+                body: data.slice(1),
+                startY: 50,
+                styles: {fontSize: 8}
             });
+            doc.save("orders.pdf");
+        };
+        </script>
 
-            // Filter for Cabang
-            $('#filterCabang').on('change', function() {
-                var cabang = $(this).val();
-                table.column(7).search(cabang).draw();
-            });
-
-            // Filter for Kategori
-            $('#filterKategori').on('change', function() {
-                var kategori = $(this).val();
-                table.column(3).search(kategori).draw();
-            });
-
-            // Reset all filters
-            $('#resetFilter').on('click', function() {
-                $('#filterStatus, #filterCabang, #filterKategori').val('').trigger('change');
-                table.search('').columns().search('').draw();
-            });
-
-            // Add margin to DataTable elements
-            $('.dataTables_length select').addClass('form-control input-sm');
-            $('.dataTables_filter input').addClass('form-control input-sm');
-        });
-    </script>
-</body>
-
-</html>
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../js/AdminLTE/app.js" type="text/javascript"></script>
+    </body>
+    </html>

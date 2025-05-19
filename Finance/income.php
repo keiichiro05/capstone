@@ -64,7 +64,7 @@ if(isset($_SESSION['username'])){
         <header class="header">
             <a href="index.php" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                E-Pharm
+                E-pharm
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -231,7 +231,7 @@ if(isset($_SESSION['username'])){
                             
                             <div class="box">
                                 <div class="box-header">
-                                    <h3 class="box-title">Pemasukan E-Pharm pada bulan :</h3>                                    
+                                    <h3 class="box-title">Pemasukan E-pharm pada bulan :</h3>                                    
                                 </div><!-- /.box-header -->
                                      
                                 <div class="box-body table-responsive">

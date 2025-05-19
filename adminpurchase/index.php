@@ -13,7 +13,7 @@ if($user['jmluser']=="0") {
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>E-Pharm | Purchase</title>
+        <title>E-pharm | Purchase</title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@ if($user['jmluser']=="0") {
     <body class="skin-blue">
         <header class="header">
             <a href="../index.html" class="logo">
-                E-Pharm
+                E-pharm
             </a>
             <nav class="navbar navbar-static-top" role="navigation">
                 <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">

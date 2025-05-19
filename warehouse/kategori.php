@@ -29,27 +29,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nama_kategori'])) {
     <head>
         <meta charset="UTF-8">
         <title>Kategori - Warehouse</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link href="../css/ionicons.min.css" rel="stylesheet" type="text/css" />
         <link href="../css/AdminLTE.css" rel="stylesheet" type="text/css" />
+        <link href="../css/modern-3d.css" rel="stylesheet" type="text/css" /> 
     </head>
-    <body class="skin-blue">
+  <body class="skin-blue">
         <header class="header">
-            <a href="index.php" class="logo">E-Pharm</a>
+            <a href="index.php" class="logo">PSN</a>
             <nav class="navbar navbar-static-top" role="navigation">
+                <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="glyphicon glyphicon-user"></i>
-                                <span><?php echo $username; ?><i class="caret"></i></span>
+                                <span><?php echo htmlspecialchars($username); ?><i class="caret"></i></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="user-header bg-light-blue">
-                                    <img src="img/<?php echo $pegawai['foto']; ?>" class="img-circle" alt="User Image" />
+                                    <img src="img/<?php echo htmlspecialchars($pegawai['foto']); ?>" class="img-circle" alt="User Image" />
                                     <p>
-                                        <?php echo $pegawai['Nama'] . " - " . $pegawai['Jabatan'] . " " . $pegawai['Departemen']; ?>
-                                        <small>Member since <?php echo $pegawai['Tanggal_Masuk']; ?></small>
+                                        <?php 
+                                        echo htmlspecialchars($pegawai['Nama']) . " - " . htmlspecialchars($pegawai['Jabatan']) . " " . htmlspecialchars($pegawai['Departemen']); ?>
+                                        <small>Member since <?php echo htmlspecialchars($pegawai['Tanggal_Masuk']); ?></small>
                                     </p>
                                 </li>
                                 <li class="user-footer">
@@ -87,33 +97,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nama_kategori'])) {
                      <ul class="sidebar-menu">
                         <li>
                             <a href="index.php">
-                                <i class="fa fa-dashboard"></i> <span>Statistical</span>
+                                <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="kategori.php">
+                                <i class="fa fa-list-alt"></i> <span>Categories</span>
                             </a>
                         </li>
                         <li>
-                            <a href="kategori.php">
-                                <i class="fa fa-list-alt"></i> <span>Category</span>
-                            </a>
-                        </li>
-                        <li >
                             <a href="order.php">
-                                <i class="fa fa-th"></i> <span>Order</span>
+                                <i class="fa fa-th"></i> <span>Orders</span>
                             </a>
                         </li>
                         <li>
                             <a href="history_order.php">
-                                <i class="fa fa-history" aria-hidden="true"></i> <span>History Order</span>
+                                <i class="fa fa-history"></i> <span>Order History</span>
                             </a>
                         </li>
-						<li class="active">
+                        <li>
                             <a href="cuti.php">
-                                <i class="fa fa-suitcase"></i> <span>Cuti</span>
+                                <i class="fa fa-suitcase"></i> <span>Leave</span>
                             </a>
                         </li>
-                         <li>
+                        <li>
                             <a href="mailbox.php">
                                 <i class="fa fa-comments"></i> <span>Mailbox</span>
-								
                             </a>
                         </li>
                     </ul>
@@ -137,7 +146,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nama_kategori'])) {
                     </form>
                     <!-- Removed redundant form submission logic -->
                     <h3>Daftar Kategori</h3>
-                    <table class="table table-striped table-bordered">
+                    <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
                         <tr>
                             <th>ID</th>
                             <th>Nama Kategori</th>
@@ -147,6 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nama_kategori'])) {
                         $sql = "SELECT * FROM kategori";
                         $hasil = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
                         while ($baris = mysqli_fetch_array($hasil)) {
+                            
                             echo "<tr>
                                 <td>{$baris['id']}</td>
                                 <td>{$baris['nama_kategori']}</td>

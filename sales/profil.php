@@ -10,7 +10,7 @@ if(!isset($_SESSION['username'])){
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>E-Pharm | Profil Pegawai</title>
+        <title>E-pharm | Profil Pegawai</title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <!-- bootstrap 3.0.2 -->
         <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -33,7 +33,7 @@ if(!isset($_SESSION['username'])){
         <header class="header">
             <a href="index.html" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                E-Pharm
+                E-pharm
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">

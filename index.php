@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>U-PSN | Log in</title>
+    <title>E-pharm | Log in</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="U-PSN Login Portal">
+    <meta name="description" content="E-pharm Login Portal">
     
     <!-- Favicon -->
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
@@ -21,7 +21,7 @@
         <!-- Left Section with Background Image -->
         <div class="left-section">
             <div class="text-white position-relative text-center p-4">
-                <h2 class="display-5 fw-bold mb-4">Welcome to U-PSN</h2>
+                <h2 class="display-5 fw-bold mb-4">Welcome to E-pharm</h2>
                 <p class="lead">Your trusted pharmaceutical network</p>
             </div>
         </div>
@@ -29,7 +29,7 @@
         <!-- Right Section with Login Form -->
         <div class="right-section">
             <div class="login-container">
-                <img src="img/logo.png" alt="U-PSN Logo" class="login-logo">
+                <img src="img/logo.png" alt="E-pharm Logo" class="login-logo">
                 <h1 class="login-header">Sign In</h1>
                 
                 <form id="loginForm" action="proses_login.php" method="post" novalidate>

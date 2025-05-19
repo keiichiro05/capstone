@@ -19,11 +19,11 @@ header("location:../index.php");
     <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="../css/AdminLTE.css" rel="stylesheet" type="text/css" />
+    <link href="../css/modern-3d.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="skin-blue">
     <header class="header">
         <a href="#" class="logo">Admin Warehouse</a>
-        <nav class="navbar navbar-static-top" role="navigation">
             <div class="navbar-right">
                 <ul class="nav navbar-nav">
                     <li class="dropdown user user-menu">
@@ -72,19 +72,19 @@ header("location:../index.php");
                                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                             </a>
                         </li>
-                        <li class="active">
+                        <li>
                             <a href="index.php">
-                                <i class="fa fa-list"></i> <span>Daftar Pesanan</span>
+                                <i class="fa fa-list"></i> <span>List Order</span>
                             </a>
                         </li>
                         <li>
                             <a href="daftarACC.php">
-                                <i class="fa fa-th"></i> <span>Daftar ACC</span>
+                                <i class="fa fa-th"></i> <span>Order History</span>
                             </a>
                         </li>
                        <li>
                             <a href="cuti.php">
-                                <i class="fa fa-suitcase"></i> <span>Cuti</span>
+                                <i class="fa fa-suitcase"></i> <span>Leave</span>
                             </a>
                         </li>
 						 <li>

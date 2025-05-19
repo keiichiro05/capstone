@@ -54,6 +54,11 @@ if(isset($_SESSION['username'])){
         <link href="../css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />
         <!-- Theme style -->
         <link href="../css/AdminLTE.css" rel="stylesheet" type="text/css" />
+        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link href="../css/ionicons.min.css" rel="stylesheet" type="text/css" />
+        <link href="../css/AdminLTE.css" rel="stylesheet" type="text/css" />
+        <link href="../css/modern-3d.css" rel="stylesheet" type="text/css" /> 
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -67,7 +72,7 @@ if(isset($_SESSION['username'])){
         <header class="header">
             <a href="index.php" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                E-Pharm
+                PSN
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -159,27 +164,27 @@ if(isset($_SESSION['username'])){
                     <ul class="sidebar-menu">
                         <li>
                             <a href="index.php">
-                                <i class="fa fa-dashboard"></i> <span>Statistical</span>
+                                <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                             </a>
                         </li>
                         <li>
                             <a href="kategori.php">
-                                <i class="fa fa-list-alt"></i> <span>Category</span>
+                                <i class="fa fa-list-alt"></i> <span>Categories</span>
                             </a>
                         </li>
                         <li >
                             <a href="order.php">
-                                <i class="fa fa-th"></i> <span>Order</span>
+                                <i class="fa fa-th"></i> <span>Orders</span>
                             </a>
                         </li>
                         <li>
                             <a href="history_order.php">
-                                <i class="fa fa-history" aria-hidden="true"></i> <span>History Order</span>
+                                <i class="fa fa-history" aria-hidden="true"></i> <span>Order History</span>
                             </a>
                         </li>
 						<li >
                             <a href="cuti.php">
-                                <i class="fa fa-suitcase"></i> <span>Cuti</span>
+                                <i class="fa fa-suitcase"></i> <span>Leave</span>
                             </a>
                         </li>
                          <li class="active">

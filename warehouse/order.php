@@ -54,9 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     </head>
     <body class="skin-blue">
         <header class="header">
-            <a href="index.html" class="logo">
-                E-Pharm
-            </a>
+            <a href="index.php" class="logo">PSN</a>
             <nav class="navbar navbar-static-top" role="navigation">
                 <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
                     <span class="sr-only">Toggle navigation</span>
@@ -69,26 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="glyphicon glyphicon-user"></i>
-                                <span><?php echo $username;?><i class="caret"></i></span>
+                                <span><?php echo htmlspecialchars($username); ?><i class="caret"></i></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="user-header bg-light-blue">
-                                    <img src="img/<?php echo $pegawai['foto'];?>" class="img-circle" alt="User Image" />
+                                    <img src="img/<?php echo htmlspecialchars($pegawai['foto']); ?>" class="img-circle" alt="User Image" />
                                     <p>
-                                        <?php echo $pegawai['Nama']." - ".$pegawai['Jabatan']." ".$pegawai['Departemen'];?>
-                                        <small>Member since <?php echo "$pegawai[Tanggal_Masuk]"; ?></small>
+                                        <?php 
+                                        echo htmlspecialchars($pegawai['Nama']) . " - " . htmlspecialchars($pegawai['Jabatan']) . " " . htmlspecialchars($pegawai['Departemen']); ?>
+                                        <small>Member since <?php echo htmlspecialchars($pegawai['Tanggal_Masuk']); ?></small>
                                     </p>
-                                </li>
-                                <li class="user-body">
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Warehouse</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Branch</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Blitar</a>
-                                    </div>
                                 </li>
                                 <li class="user-footer">
                                     <div class="pull-left">
@@ -104,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
                 </div>
             </nav>
         </header>
-        
         <div class="wrapper row-offcanvas row-offcanvas-left">
             <aside class="left-side sidebar-offcanvas">
                 <section class="sidebar">

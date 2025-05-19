@@ -34,6 +34,7 @@ header("location:../index.php");
         <link href="../css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />
         <!-- Theme style -->
         <link href="../css/AdminLTE.css" rel="stylesheet" type="text/css" />
+        <link href="../css/modern-3d.css" rel="stylesheet" type="text/css" />
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -43,42 +44,24 @@ header("location:../index.php");
         <![endif]-->
     </head>
     <body class="skin-blue">
-        <!-- header logo: style can be found in header.less -->
         <header class="header">
-            <a href="index.html" class="logo">
-                <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                E-Pharm
-            </a>
-            <!-- Header Navbar: style can be found in header.less -->
-            <nav class="navbar navbar-static-top" role="navigation">
-                <!-- Sidebar toggle button-->
-                <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
+            <a href="index.html" class="logo">Admin Warehouse</a>
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
-                        <!-- Messages: style can be found in dropdown.less-->
-                        
-                        <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="glyphicon glyphicon-user"></i>
-                                <span><?php echo $username;?> <i class="caret"></i></span>
+                                <span><?php echo $username; ?><i class="caret"></i></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <!-- User image -->
                                 <li class="user-header bg-light-blue">
-                                    <img src="img/<?php echo $pegawai['foto'];?>" class="img-circle" alt="User Image" />
+                                    <img src="img/<?php echo $pegawai['foto']; ?>" class="img-circle" alt="User Image" />
                                     <p>
-                                        <?php 
-										echo $pegawai['Nama']." - ".$pegawai['Jabatan']." ".$pegawai['Departemen'];?>
+                                        <?php
+                                        echo $pegawai['Nama'] . " - " . $pegawai['Jabatan'] . " " . $pegawai['Departemen']; ?>
                                         <small>Member since <?php echo "$pegawai[Tanggal_Masuk]"; ?></small>
                                     </p>
                                 </li>
-                                <!-- Menu Body -->
                                 <li class="user-body">
                                     <div class="col-xs-4 text-center">
                                         <a href="#">Admin</a>
@@ -90,9 +73,8 @@ header("location:../index.php");
                                         <a href="#"></a>
                                     </div>
                                 </li>
-                                <!-- Menu Footer-->
                                 <li class="user-footer">
-								 <div class="pull-left">
+                                    <div class="pull-left">
                                         <a href="profil.php" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <div class="pull-right">
@@ -131,17 +113,17 @@ header("location:../index.php");
                         </li>
                         <li>
                             <a href="index.php">
-                                <i class="fa fa-list"></i> <span>Daftar Pesanan</span>
+                                <i class="fa fa-list"></i> <span>List Order</span>
                             </a>
                         </li>
                         <li>
                             <a href="daftarACC.php">
-                                <i class="fa fa-th"></i> <span>Daftar ACC</span>
+                                <i class="fa fa-th"></i> <span>Order History</span>
                             </a>
                         </li>
                         <li class="active">
                             <a href="cuti.php">
-                                <i class="fa fa-suitcase"></i> <span>Cuti</span>
+                                <i class="fa fa-suitcase"></i> <span>Leave</span>
                             </a>
                         </li>
 						 <li>
@@ -160,8 +142,8 @@ header("location:../index.php");
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Warehouse
-                        <small>Admin</small>
+                        Leave Form  
+                        <small>Warehouse Manager</small>
                     </h1>
                     <ol class="breadcrumb">
                     </ol>
@@ -169,24 +151,28 @@ header("location:../index.php");
 
                 <!-- Main content -->
                 <section class="content">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+    
                 <form method="post">
-                    <h1>Form Cuti</h1><br>
+                    <h1>Leave Form Request</h1><br>
                     <div class="row">
                         <div class="col-md-4">
-                            <strong>Tanggal Mulai</strong>
+                            <strong>Start Date</strong>
                             <input type="date" name="mulai" class="form-control">
                         </div>
                         <div class="col-md-4">
-                            <strong>Tanggal Selesai</strong>
+                            <strong>End Date</strong>
                             <input type="date" name="selesai" class="form-control">
                         </div>
                         <div class="col-md-4">
-                            <strong>Detail Cuti</strong>
+                            <strong>Details</strong>
                             <select name="detail" class="form-control">
-                            <option value="">---Pilih Detail---</option>
-                            <option value="1">Sakit</option>
-                            <option value="2">Hamil</option>
-                            <option value="3">Lainnya</option>
+                            <option value="">---Select Details---</option>
+                            <option value="1">Sick</option>
+                            <option value="2">Pregnant</option>
+                            <option value="3">Etc</option>
                         </select>
                         </div>
                         <div class="col-md-1">
@@ -194,7 +180,8 @@ header("location:../index.php");
                             <input type="submit" class="btn btn-primary" value="Submit">
                         </div>
                     </div><br>
-                </form>    
+                </form>
+                                </div>
                 <?php
                 include "konekdb.php";
                 error_reporting(0);
@@ -207,9 +194,9 @@ header("location:../index.php");
                 mysqli_query($mysqli, "INSERT INTO cuti (id_pegawai, Nama, Departemen, Tanggal_Mulai, Tanggal_Selesai, Detail_cuti, Aksi) VALUES ('$idpegawai', '{$pegawai['Nama']}', '{$pegawai['Departemen']}', '$mulai', '$selesai', '$detail', '$aksi')");
 				  }else{}
                 ?>
-                        <h1>Pengajuan Cuti</h1>
+                        <h1>Leave Request</h1>
                         <table class="table table-bordered table-striped">
-                        <tr><td>Tanggal Mulai</td><td>Tanggal Selesai</td><td>Detail Cuti</td><td>Status</td></tr>
+                        <tr><td>Start Date</td><td>End Date</td><td>Reason Details</td><td>Status</td></tr>
                         <?php
                         $sql = "SELECT * FROM cuti where id_pegawai='$idpegawai'";
                         $hasil = mysqli_query($mysqli, $sql);

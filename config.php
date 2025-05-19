@@ -3,7 +3,7 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db = "e-pharm";
+$db = "E-pharm";
 $conn = mysqli_connect($host, $user, $pass, $db);
 
 if (!$conn) {

@@ -5,7 +5,7 @@ session_start();
 $username = $_SESSION['username'];
 
 // Gunakan koneksi mysqli
-$mysqli = mysqli_connect($server, $user, $password, "e-pharm");
+$mysqli = mysqli_connect($server, $user, $password, "E-pharm");
 if ($mysqli->connect_error) {
     die("Connection failed: " . $mysqli->connect_error);
 }
@@ -58,7 +58,7 @@ if ($user['jmluser'] == "0") {
         <header class="header">
             <a href="index.html" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                E-Pharm
+                E-pharm
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">

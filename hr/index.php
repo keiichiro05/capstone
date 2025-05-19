@@ -40,7 +40,7 @@ header("location:../index.php");
         <header class="header">
             <a href="index.html" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                e-Pharm
+                E-pharm
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -211,7 +211,7 @@ header("location:../index.php");
 				</td>
 				<td>Aksi</td></tr></thead><tbody>
                 				<?php
-$con=mysqli_connect("localhost","root","","e-pharm");
+$con=mysqli_connect("localhost","root","","E-pharm");
 // Check connection
 if (mysqli_connect_errno())
 {

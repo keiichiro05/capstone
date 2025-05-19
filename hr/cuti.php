@@ -13,7 +13,7 @@ header("location:../index.php");
 };?>
 <html>
     <head>
-        <title>E-Pharm | Purhcase</title>
+        <title>E-pharm | Purhcase</title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <!-- bootstrap 3.0.2 -->
         <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@ header("location:../index.php");
         <header class="header">
             <a href="index.php" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                e-Pharm
+                E-pharm
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">

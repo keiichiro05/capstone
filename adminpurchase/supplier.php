@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nama_kategori'])) {
     </head>
     <body class="skin-blue">
         <header class="header">
-            <a href="index.php" class="logo">E-Pharm</a>
+            <a href="index.php" class="logo">E-pharm</a>
             <nav class="navbar navbar-static-top" role="navigation">
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">

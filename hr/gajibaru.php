@@ -3,7 +3,7 @@
 $host="localhost"; // Host name 
 $username="root"; // mysqli username 
 $password=""; // mysqli password 
-$db_name="e-pharm"; // Database name 
+$db_name="E-pharm"; // Database name 
 $tbl_name="pegawai"; // Table name 
 
 // Connect to server and select database.

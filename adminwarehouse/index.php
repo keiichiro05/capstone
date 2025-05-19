@@ -125,18 +125,12 @@ if(isset($_GET['accept']) && isset($_GET['no'])) {
         <link href="../css/ionicons.min.css" rel="stylesheet" type="text/css" />
         <!-- Theme style -->
         <link href="../css/AdminLTE.css" rel="stylesheet" type="text/css" />
+        <link href="../css/modern-3d.css" rel="stylesheet" type="text/css" />
     </head>
     <body class="skin-blue">
         <!-- header logo: style can be found in header.less -->
         <header class="header">
-            <a href="index.html" class="logo">E-Pharm</a>
-            <nav class="navbar navbar-static-top" role="navigation">
-                <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
+            <a href="index.html" class="logo">Admin Warehouse</a>
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
                         <li class="dropdown user user-menu">
@@ -180,24 +174,24 @@ if(isset($_GET['accept']) && isset($_GET['no'])) {
                         </div>
                     </div>
                     <ul class="sidebar-menu">
-                        <li class="active">
+                        <li>
                             <a href="dashboard.php">
                                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                             </a>
                         </li>
                         <li class="active">
                             <a href="index.php">
-                                <i class="fa fa-list"></i> <span>Daftar Pesanan</span>
+                                <i class="fa fa-list"></i> <span>List Order</span>
                             </a>
                         </li>
                         <li>
                             <a href="daftarACC.php">
-                                <i class="fa fa-th"></i> <span>Daftar ACC</span>
+                                <i class="fa fa-th"></i> <span>Order History</span>
                             </a>
                         </li>
                         <li>
                             <a href="cuti.php">
-                                <i class="fa fa-suitcase"></i> <span>Cuti</span>
+                                <i class="fa fa-suitcase"></i> <span>Leave</span>
                             </a>
                         </li>
                         <li>
@@ -213,8 +207,8 @@ if(isset($_GET['accept']) && isset($_GET['no'])) {
             <aside class="right-side">
                 <section class="content-header">
                     <h1>
-                        Warehouse
-                        <small>Admin</small>
+                        List Order
+                        <small>Warehouse Manager</small>
                     </h1>
                     <ol class="breadcrumb">
                     </ol>
@@ -228,20 +222,20 @@ if(isset($_GET['accept']) && isset($_GET['no'])) {
                         unset($_SESSION['message']);
                     }
                     ?>
-                    <h1>Daftar Pesanan Barang dari Cabang</h1>
+                    <h1>List Order From Branch</h1>
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>code</th>
-                                <th>Nama</th>
-                                <th>Jumlah</th>
-                                <th>Satuan</th>
+                                <th>Name</th>
+                                <th>Qty</th>
+                                <th>Unit</th>
                                 <th>Supplier</th>
                                 <th>Status</th>
-                                <th>Cabang</th>
-                                <th>Kategori</th>
-                                <th>Aksi</th>
+                                <th>Branch</th>
+                                <th>Category</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
